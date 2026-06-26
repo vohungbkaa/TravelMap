@@ -19,6 +19,49 @@ lib/
   shared/          app database, Result, Command, and other cross-feature code
 ```
 
+## API Modules
+
+The API setup uses `retrofit.dart` and follows the same idea as Kotlin Retrofit
+modules:
+
+```txt
+shared/network/api_client_factory.dart    common Dio builder and interceptors
+features/users/data/services/             UserApiService with @GET/@Path/@Query
+features/trips/data/services/             TripApiService with @GET/@Path/@Query
+features/auth/data/services/              AuthApiService with @GET/@Path/@Query
+config/dependencies.dart                  composes base API and feature APIs
+config/di/base_module.dart                shared network/database providers
+config/di/auth_module.dart                auth providers
+config/di/users_module.dart               users providers
+config/di/trips_module.dart               trips providers
+```
+
+Each feature DI module owns its base URL:
+
+```dart
+const _userBaseUrl = 'https://service.example.com';
+
+Provider(
+  create: (context) => UserApiService(
+    context.read<ApiClientFactory>().create(baseUrl: _userBaseUrl),
+  ),
+);
+```
+
+Two services may share a base URL or use different base URLs. The app does not
+use one global Dio instance. Each API service receives its own Dio built by
+`ApiClientFactory`, similar to creating a Retrofit instance per module.
+
+API service files stay close to Kotlin Retrofit interfaces: they only describe
+endpoints with `@GET`, `@Path`, `@Query`, and return types.
+
+Generated Retrofit implementations live next to their service declarations as
+`*.g.dart` files. Regenerate them after changing an API interface:
+
+```sh
+dart run build_runner build
+```
+
 ## Data Flow
 
 Screens do not call APIs or databases directly.

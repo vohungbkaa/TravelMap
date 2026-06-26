@@ -25,6 +25,10 @@ class Trip {
     );
   }
 
+  factory Trip.fromJson(Map<String, dynamic> json) {
+    return Trip.fromApiJson(json);
+  }
+
   factory Trip.fromDatabaseRow(Map<String, Object?> row) {
     return Trip(
       id: row['id']! as int,

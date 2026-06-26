@@ -1,18 +1,16 @@
 import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:travel_map/features/trips/domain/models/trip.dart';
 
-class TripApiService {
-  const TripApiService({required Dio dio}) : _dio = dio;
+part 'trip_api_service.g.dart';
 
-  final Dio _dio;
+@RestApi()
+abstract class TripApiService {
+  factory TripApiService(Dio dio) = _TripApiService;
 
-  Future<List<Trip>> getTrips() async {
-    final response = await _dio.get<List<dynamic>>('/todos');
-    final data = response.data ?? [];
+  @GET('/todos')
+  Future<List<Trip>> getTrips();
 
-    return [
-      for (final item in data.take(20))
-        Trip.fromApiJson(Map<String, dynamic>.from(item as Map)),
-    ];
-  }
+  @GET('/todos/{id}')
+  Future<Trip> getTripById(@Path('id') int tripId);
 }

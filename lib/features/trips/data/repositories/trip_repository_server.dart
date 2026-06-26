@@ -14,7 +14,8 @@ class TripRepositoryServer implements TripServerRepository {
   @override
   Future<Result<List<Trip>>> getTrips() async {
     try {
-      return Ok(await _apiService.getTrips());
+      final trips = await _apiService.getTrips();
+      return Ok(trips.take(20).toList());
     } on Object catch (error, stackTrace) {
       _log.warning('Failed to load remote trips', error, stackTrace);
       return Error(error, stackTrace);

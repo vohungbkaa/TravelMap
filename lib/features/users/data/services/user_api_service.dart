@@ -1,18 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:travel_map/features/users/domain/models/user.dart';
 
-class UserApiService {
-  const UserApiService({required Dio dio}) : _dio = dio;
+part 'user_api_service.g.dart';
 
-  final Dio _dio;
+@RestApi()
+abstract class UserApiService {
+  factory UserApiService(Dio dio) = _UserApiService;
 
-  Future<List<User>> getUsers() async {
-    final response = await _dio.get<List<dynamic>>('/users');
-    final data = response.data ?? [];
+  @GET('/users')
+  Future<List<User>> getUsers();
 
-    return [
-      for (final item in data)
-        User.fromApiJson(Map<String, dynamic>.from(item as Map)),
-    ];
-  }
+  @GET('/users/{id}')
+  Future<User> getUserById(@Path('id') int userId);
+
+  @GET('/users')
+  Future<List<User>> getUsersByRole(@Query('role') String role);
 }

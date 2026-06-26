@@ -29,6 +29,10 @@ class User {
     );
   }
 
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User.fromApiJson(json);
+  }
+
   factory User.fromDatabaseRow(Map<String, Object?> row) {
     return User(
       id: row['id']! as int,
