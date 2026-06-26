@@ -10,28 +10,3 @@ abstract class AuthInteractor {
   });
 }
 
-class AuthInteractorImpl implements AuthInteractor {
-  AuthInteractorImpl(this._serverRepository, this._tokenProvider);
-
-  final AuthServerRepository _serverRepository;
-  final InMemoryAuthTokenProvider _tokenProvider;
-
-  @override
-  Future<Result<AuthSession>> login({
-    required String username,
-    required String password,
-  }) async {
-    final result = await _serverRepository.login(
-      username: username,
-      password: password,
-    );
-
-    switch (result) {
-      case Ok<AuthSession>():
-        _tokenProvider.accessToken.value = result.value.accessToken;
-      case Error<AuthSession>():
-    }
-
-    return result;
-  }
-}

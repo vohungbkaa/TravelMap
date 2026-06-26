@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_map/features/trips/data/repositories/trip_repository.dart';
 import 'package:travel_map/features/trips/domain/interactors/trip_interactor.dart';
+import 'package:travel_map/features/trips/domain/interactors/trip_interactor_impl.dart';
 import 'package:travel_map/features/trips/domain/models/trip.dart';
 import 'package:travel_map/features/trips/ui/view_models/trips_view_model.dart';
 import 'package:travel_map/features/trips/ui/widgets/trips_screen.dart';

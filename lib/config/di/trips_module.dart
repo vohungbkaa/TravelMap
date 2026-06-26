@@ -8,6 +8,7 @@ import 'package:travel_map/features/trips/data/repositories/trip_repository_serv
 import 'package:travel_map/features/trips/data/services/trip_api_service.dart';
 import 'package:travel_map/features/trips/data/services/trip_local_service.dart';
 import 'package:travel_map/features/trips/domain/interactors/trip_interactor.dart';
+import 'package:travel_map/features/trips/domain/interactors/trip_interactor_impl.dart';
 import 'package:travel_map/shared/network/api_client_factory.dart';
 import 'package:travel_map/shared/network/auth_interceptor.dart';
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:travel_map/app.dart';
 import 'package:travel_map/features/users/data/repositories/user_repository.dart';
 import 'package:travel_map/features/users/domain/interactors/user_interactor.dart';
+import 'package:travel_map/features/users/domain/interactors/user_interactor_impl.dart';
 import 'package:travel_map/features/users/domain/models/user.dart';
 import 'package:travel_map/shared/result.dart';
 

@@ -6,6 +6,7 @@ import 'package:travel_map/features/auth/data/repositories/auth_repository.dart'
 import 'package:travel_map/features/auth/data/repositories/auth_repository_server.dart';
 import 'package:travel_map/features/auth/data/services/auth_api_service.dart';
 import 'package:travel_map/features/auth/domain/interactors/auth_interactor.dart';
+import 'package:travel_map/features/auth/domain/interactors/auth_interactor_impl.dart';
 import 'package:travel_map/shared/network/api_client_factory.dart';
 
 List<SingleChildWidget> get authModule {
