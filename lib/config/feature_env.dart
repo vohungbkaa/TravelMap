@@ -6,7 +6,7 @@ enum EnvConfig {
 // ignore: constant_identifier_names, keep the backend config name explicit.
 const BASE_URL_DEFAULT = 'https://jsonplaceholder.typicode.com';
 
-sealed class FeatureEnv {
+class FeatureEnv {
   const FeatureEnv({
     this.testUrl = BASE_URL_DEFAULT,
     this.releaseUrl = BASE_URL_DEFAULT,
@@ -25,23 +25,13 @@ sealed class FeatureEnv {
   }
 }
 
-final class FeatureAuthEnv extends FeatureEnv {
-  const FeatureAuthEnv({
-    super.testUrl,
-    super.releaseUrl,
-  });
-}
+enum FeatureConfig {
+  auth(FeatureEnv()),
+  user(FeatureEnv()),
+  trip(FeatureEnv());
 
-final class FeatureUserEnv extends FeatureEnv {
-  const FeatureUserEnv({
-    super.testUrl,
-    super.releaseUrl,
-  });
-}
+  const FeatureConfig(this.env);
+  final FeatureEnv env;
 
-final class FeatureTripEnv extends FeatureEnv {
-  const FeatureTripEnv({
-    super.testUrl,
-    super.releaseUrl,
-  });
+  String get baseUrl => env.getBaseUrl();
 }

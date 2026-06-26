@@ -10,14 +10,12 @@ import 'package:travel_map/features/trips/domain/interactors/trip_interactor.dar
 import 'package:travel_map/shared/network/api_client_factory.dart';
 import 'package:travel_map/shared/network/auth_interceptor.dart';
 
-const _tripEnv = FeatureTripEnv();
-
 List<SingleChildWidget> get tripsModule {
   return [
     Provider(
       create: (context) => TripApiService(
         context.read<ApiClientFactory>().create(
-          baseUrl: _tripEnv.getBaseUrl(),
+          baseUrl: FeatureConfig.trip.baseUrl,
           interceptors: [context.read<AuthInterceptor>()],
         ),
       ),

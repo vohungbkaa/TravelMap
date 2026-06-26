@@ -10,14 +10,12 @@ import 'package:travel_map/features/users/domain/interactors/user_interactor.dar
 import 'package:travel_map/shared/network/api_client_factory.dart';
 import 'package:travel_map/shared/network/auth_interceptor.dart';
 
-const _userEnv = FeatureUserEnv();
-
 List<SingleChildWidget> get usersModule {
   return [
     Provider(
       create: (context) => UserApiService(
         context.read<ApiClientFactory>().create(
-          baseUrl: _userEnv.getBaseUrl(),
+          baseUrl: FeatureConfig.user.baseUrl,
           interceptors: [context.read<AuthInterceptor>()],
         ),
       ),

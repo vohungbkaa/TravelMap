@@ -7,13 +7,13 @@ import 'package:travel_map/features/auth/data/services/auth_api_service.dart';
 import 'package:travel_map/features/auth/domain/interactors/auth_interactor.dart';
 import 'package:travel_map/shared/network/api_client_factory.dart';
 
-const _authEnv = FeatureAuthEnv();
-
 List<SingleChildWidget> get authModule {
   return [
     Provider(
       create: (context) => AuthApiService(
-        context.read<ApiClientFactory>().create(baseUrl: _authEnv.getBaseUrl()),
+        context.read<ApiClientFactory>().create(
+            baseUrl: FeatureConfig.auth.baseUrl
+        ),
       ),
     ),
     Provider(
