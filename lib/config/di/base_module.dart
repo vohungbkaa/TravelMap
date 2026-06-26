@@ -8,7 +8,6 @@ import 'package:travel_map/shared/network/auth_token_provider.dart';
 
 List<SingleChildWidget> get baseModule {
   return [
-    Provider<Logger>(create: (_) => Logger('App')),
     Provider.value(value: const ApiClientFactory()),
     Provider<InMemoryAuthTokenProvider>(
       create: (context) => InMemoryAuthTokenProvider(),

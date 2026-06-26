@@ -20,7 +20,7 @@ List<SingleChildWidget> get authModule {
     Provider(
       create: (context) => AuthRepositoryServer(
         context.read(),
-        context.read<Logger>(),
+        Logger('Auth'),
       ) as AuthServerRepository,
     ),
     Provider(

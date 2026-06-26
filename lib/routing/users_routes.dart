@@ -14,7 +14,7 @@ List<RouteBase> get usersRoutes {
         return ChangeNotifierProvider(
           create: (context) => UsersViewModel(
             context.read(),
-            context.read<Logger>(),
+            Logger('Users'),
           ),
           child: const UsersScreen(),
         );

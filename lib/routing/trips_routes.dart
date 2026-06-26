@@ -14,7 +14,7 @@ List<RouteBase> get tripsRoutes {
         return ChangeNotifierProvider(
           create: (context) => TripsViewModel(
             context.read(),
-            context.read<Logger>(),
+            Logger('Trips'),
           ),
           child: const TripsScreen(),
         );
