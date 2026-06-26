@@ -4,8 +4,8 @@ import 'package:travel_map/features/users/data/services/user_local_service.dart'
 import 'package:travel_map/features/users/domain/models/user.dart';
 import 'package:travel_map/shared/result.dart';
 
-class UserRepositoryLocal implements UserLocalRepository {
-  UserRepositoryLocal(this._localService, this._log);
+class UserLocalRepositoryImpl implements UserLocalRepository {
+  UserLocalRepositoryImpl(this._localService, this._log);
 
   final UserLocalService _localService;
   final Logger _log;

@@ -3,8 +3,15 @@ import 'package:travel_map/features/auth/domain/models/auth_session.dart';
 import 'package:travel_map/shared/network/auth_token_provider.dart';
 import 'package:travel_map/shared/result.dart';
 
-class AuthInteractor {
-  AuthInteractor(this._serverRepository, this._tokenProvider);
+abstract class AuthInteractor {
+  Future<Result<AuthSession>> login({
+    required String username,
+    required String password,
+  });
+}
+
+class AuthInteractorImpl implements AuthInteractor {
+  AuthInteractorImpl(this._serverRepository, this._tokenProvider);
 
   final AuthServerRepository _serverRepository;
   final InMemoryAuthTokenProvider _tokenProvider;

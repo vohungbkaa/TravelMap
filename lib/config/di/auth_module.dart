@@ -17,14 +17,14 @@ List<SingleChildWidget> get authModule {
         ),
       ),
     ),
-    Provider(
-      create: (context) => AuthRepositoryServer(
+    Provider<AuthServerRepository>(
+      create: (context) => AuthServerRepositoryImpl(
         context.read(),
         Logger('Auth'),
-      ) as AuthServerRepository,
+      ),
     ),
-    Provider(
-      create: (context) => AuthInteractor(
+    Provider<AuthInteractor>(
+      create: (context) => AuthInteractorImpl(
         context.read(),
         context.read(),
       ),

@@ -4,8 +4,8 @@ import 'package:travel_map/features/auth/data/services/auth_api_service.dart';
 import 'package:travel_map/features/auth/domain/models/auth_session.dart';
 import 'package:travel_map/shared/result.dart';
 
-class AuthRepositoryServer implements AuthServerRepository {
-  AuthRepositoryServer(this._apiService, this._log);
+class AuthServerRepositoryImpl implements AuthServerRepository {
+  AuthServerRepositoryImpl(this._apiService, this._log);
 
   final AuthApiService _apiService;
   final Logger _log;

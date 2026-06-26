@@ -3,35 +3,28 @@ import 'package:travel_map/features/users/data/repositories/user_repository.dart
 import 'package:travel_map/features/users/domain/models/user.dart';
 import 'package:travel_map/shared/result.dart';
 
-class UserInteractor {
-  UserInteractor(this._localRepository, this._serverRepository, this._log);
+abstract class UserInteractor {
+  Future<Result<List<User>>> getListUser();
+}
+
+class UserInteractorImpl implements UserInteractor {
+  UserInteractorImpl(this._localRepository, this._serverRepository, this._log);
 
   final UserLocalRepository _localRepository;
   final UserServerRepository _serverRepository;
   final Logger _log;
 
-  Future<Result<List<User>>> getLocalUsers() {
-    return _localRepository.getUsers();
-  }
-
-  Future<Result<DateTime?>> getLastSyncedAt() {
-    return _localRepository.getLastSyncedAt();
-  }
-
-  Future<Result<List<User>>> syncUsers() async {
+  Future<Result<List<User>>> getListUser() async {
+    // Ưu tiên gọi API trước
     final remoteResult = await _serverRepository.getUsers();
-    switch (remoteResult) {
-      case Error<List<User>>():
-        return remoteResult;
-      case Ok<List<User>>():
-        final saveResult = await _localRepository.saveUsers(remoteResult.value);
-        switch (saveResult) {
-          case Error<void>():
-            _log.warning('Failed to persist remote users', saveResult.error);
-            return Error(saveResult.error, saveResult.stackTrace);
-          case Ok<void>():
-            return _localRepository.getUsers();
-        }
+    if (remoteResult is Ok<List<User>>) {
+      // Lưu vào cache
+      await _localRepository.saveUsers(remoteResult.value);
+      return remoteResult;
     }
+    
+    _log.warning('Lỗi gọi API, lấy dữ liệu từ local cache');
+    // Fallback về Local
+    return _localRepository.getUsers();
   }
 }

@@ -4,8 +4,8 @@ import 'package:travel_map/features/trips/data/services/trip_local_service.dart'
 import 'package:travel_map/features/trips/domain/models/trip.dart';
 import 'package:travel_map/shared/result.dart';
 
-class TripRepositoryLocal implements TripLocalRepository {
-  TripRepositoryLocal(this._localService, this._log);
+class TripLocalRepositoryImpl implements TripLocalRepository {
+  TripLocalRepositoryImpl(this._localService, this._log);
 
   final TripLocalService _localService;
   final Logger _log;

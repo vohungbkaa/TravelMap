@@ -22,20 +22,20 @@ List<SingleChildWidget> get tripsModule {
       ),
     ),
     Provider(create: (context) => TripLocalService(database: context.read())),
-    Provider(
-      create: (context) => TripRepositoryLocal(
+    Provider<TripLocalRepository>(
+      create: (context) => TripLocalRepositoryImpl(
         context.read(),
         Logger('Trips'),
-      ) as TripLocalRepository,
+      ),
     ),
-    Provider(
-      create: (context) => TripRepositoryServer(
+    Provider<TripServerRepository>(
+      create: (context) => TripServerRepositoryImpl(
         context.read(),
         Logger('Trips'),
-      ) as TripServerRepository,
+      ),
     ),
-    Provider(
-      create: (context) => TripInteractor(
+    Provider<TripInteractor>(
+      create: (context) => TripInteractorImpl(
         context.read(),
         context.read(),
         Logger('Trips'),

@@ -22,20 +22,20 @@ List<SingleChildWidget> get usersModule {
       ),
     ),
     Provider(create: (context) => UserLocalService(database: context.read())),
-    Provider(
-      create: (context) => UserRepositoryLocal(
+    Provider<UserLocalRepository>(
+      create: (context) => UserLocalRepositoryImpl(
         context.read(),
         Logger('Users'),
-      ) as UserLocalRepository,
+      ),
     ),
-    Provider(
-      create: (context) => UserRepositoryServer(
+    Provider<UserServerRepository>(
+      create: (context) => UserServerRepositoryImpl(
         context.read(),
         Logger('Users'),
-      ) as UserServerRepository,
+      ),
     ),
-    Provider(
-      create: (context) => UserInteractor(
+    Provider<UserInteractor>(
+      create: (context) => UserInteractorImpl(
         context.read(),
         context.read(),
         Logger('Users'),

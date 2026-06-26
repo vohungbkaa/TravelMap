@@ -3,8 +3,14 @@ import 'package:travel_map/features/trips/data/repositories/trip_repository.dart
 import 'package:travel_map/features/trips/domain/models/trip.dart';
 import 'package:travel_map/shared/result.dart';
 
-class TripInteractor {
-  TripInteractor(this._localRepository, this._serverRepository, this._log);
+abstract class TripInteractor {
+  Future<Result<List<Trip>>> getLocalTrips();
+  Future<Result<DateTime?>> getLastSyncedAt();
+  Future<Result<List<Trip>>> syncTrips();
+}
+
+class TripInteractorImpl implements TripInteractor {
+  TripInteractorImpl(this._localRepository, this._serverRepository, this._log);
 
   final TripLocalRepository _localRepository;
   final TripServerRepository _serverRepository;

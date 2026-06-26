@@ -11,7 +11,7 @@ List<RouteBase> get usersRoutes {
       path: UsersScreen.routePath,
       name: UsersScreen.routeName,
       builder: (context, state) {
-        return ChangeNotifierProvider(
+        return Provider(
           create: (context) => UsersViewModel(
             context.read(),
             Logger('Users'),
