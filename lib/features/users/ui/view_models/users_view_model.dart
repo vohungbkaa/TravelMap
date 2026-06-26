@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:travel_map/features/users/domain/interactors/user_interactor.dart';
@@ -6,7 +8,7 @@ import 'package:travel_map/shared/result.dart';
 
 class UsersViewModel {
   UsersViewModel(this._userInteractor, this._log) {
-    fetchUsers();
+    unawaited(fetchUsers());
   }
 
   final UserInteractor _userInteractor;
@@ -20,14 +22,24 @@ class UsersViewModel {
   ValueListenable<bool> get isLoading => _isLoading;
 
   Future<void> fetchUsers() async {
-    _isLoading.value = true;
+    // 1. Hiển thị cache ngay lập tức
+    final cached = await _userInteractor.getLocalUsers();
+    if (cached is Ok<List<User>>) {
+      _users.value = cached.value;
+    }
     
-    final result = await _userInteractor.getListUser();
+    // Nếu cache trống thì mới xoay loading
+    if (_users.value.isEmpty) {
+      _isLoading.value = true;
+    }
     
-    if (result is Ok<List<User>>) {
-      _users.value = result.value;
-    } else if (result is Error<List<User>>) {
-      _log.severe('Lỗi lấy danh sách user', result.error);
+    // 2. Lấy từ API ngầm, lưu xuống DB và cập nhật UI
+    final synced = await _userInteractor.syncUsers();
+    
+    if (synced is Ok<List<User>>) {
+      _users.value = synced.value;
+    } else if (synced is Error<List<User>>) {
+      _log.severe('Lỗi đồng bộ danh sách user', synced.error);
     }
     
     _isLoading.value = false;

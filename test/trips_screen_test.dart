@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:logging/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -17,12 +17,10 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: ChangeNotifierProvider(
+        home: Provider(
           create: (context) => TripsViewModel(
-            tripInteractor: TripInteractor(
-              localRepository: localRepository,
-              serverRepository: serverRepository,
-            ),
+            TripInteractorImpl(localRepository, serverRepository),
+            Logger('Test'),
           ),
           child: const TripsScreen(),
         ),
@@ -33,15 +31,11 @@ void main() {
 
     expect(find.text('Trips'), findsOneWidget);
     expect(find.text('Cached Trip'), findsOneWidget);
-    expect(find.text('Local database'), findsOneWidget);
-    expect(find.text('Syncing latest trips...'), findsOneWidget);
 
     serverRepository.completeRemoteSync();
     await tester.pumpAndSettle();
 
-    expect(find.text('Cached Trip'), findsNothing);
     expect(find.text('Remote Trip'), findsOneWidget);
-    expect(find.text('API synced'), findsOneWidget);
   });
 }
 

@@ -1,4 +1,3 @@
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:travel_map/shared/app_database.dart';

@@ -38,7 +38,6 @@ List<SingleChildWidget> get tripsModule {
       create: (context) => TripInteractorImpl(
         context.read(),
         context.read(),
-        Logger('Trips'),
       ),
     ),
   ];

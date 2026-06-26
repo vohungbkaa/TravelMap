@@ -38,7 +38,6 @@ List<SingleChildWidget> get usersModule {
       create: (context) => UserInteractorImpl(
         context.read(),
         context.read(),
-        Logger('Users'),
       ),
     ),
   ];
