@@ -30,20 +30,24 @@ features/users/data/services/             UserApiService with @GET/@Path/@Query
 features/trips/data/services/             TripApiService with @GET/@Path/@Query
 features/auth/data/services/              AuthApiService with @GET/@Path/@Query
 config/dependencies.dart                  composes base API and feature APIs
+config/feature_env.dart                   per-feature test/release base URLs
 config/di/base_module.dart                shared network/database providers
 config/di/auth_module.dart                auth providers
 config/di/users_module.dart               users providers
 config/di/trips_module.dart               trips providers
 ```
 
-Each feature DI module owns its base URL:
+Each feature DI module owns its base URL through `FeatureEnv`:
 
 ```dart
-const _userBaseUrl = 'https://service.example.com';
+const _userEnv = FeatureUserEnv(
+  testUrl: 'https://test-user-service.example.com',
+  releaseUrl: 'https://user-service.example.com',
+);
 
 Provider(
   create: (context) => UserApiService(
-    context.read<ApiClientFactory>().create(baseUrl: _userBaseUrl),
+    context.read<ApiClientFactory>().create(baseUrl: _userEnv.getBaseUrl()),
   ),
 );
 ```
@@ -51,6 +55,9 @@ Provider(
 Two services may share a base URL or use different base URLs. The app does not
 use one global Dio instance. Each API service receives its own Dio built by
 `ApiClientFactory`, similar to creating a Retrofit instance per module.
+
+`FeatureEnv.currentEnv` defaults to `EnvConfig.release`. For now every feature
+uses `BASE_URL_DEFAULT`, and individual feature URLs can be overridden later.
 
 API service files stay close to Kotlin Retrofit interfaces: they only describe
 endpoints with `@GET`, `@Path`, `@Query`, and return types.
