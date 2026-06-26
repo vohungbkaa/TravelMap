@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:travel_map/config/feature_env.dart';
@@ -22,21 +23,22 @@ List<SingleChildWidget> get tripsModule {
     ),
     Provider(create: (context) => TripLocalService(database: context.read())),
     Provider(
-      create: (context) =>
-          TripRepositoryLocal(
-                localService: context.read(),
-              )
-              as TripLocalRepository,
+      create: (context) => TripRepositoryLocal(
+        context.read(),
+        context.read<Logger>(),
+      ) as TripLocalRepository,
     ),
     Provider(
-      create: (context) =>
-          TripRepositoryServer(apiService: context.read())
-              as TripServerRepository,
+      create: (context) => TripRepositoryServer(
+        context.read(),
+        context.read<Logger>(),
+      ) as TripServerRepository,
     ),
     Provider(
       create: (context) => TripInteractor(
-        localRepository: context.read(),
-        serverRepository: context.read(),
+        context.read(),
+        context.read(),
+        context.read<Logger>(),
       ),
     ),
   ];

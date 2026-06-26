@@ -4,15 +4,11 @@ import 'package:travel_map/features/trips/domain/models/trip.dart';
 import 'package:travel_map/shared/result.dart';
 
 class TripInteractor {
-  TripInteractor({
-    required TripLocalRepository localRepository,
-    required TripServerRepository serverRepository,
-  }) : _localRepository = localRepository,
-       _serverRepository = serverRepository;
+  TripInteractor(this._localRepository, this._serverRepository, this._log);
 
   final TripLocalRepository _localRepository;
   final TripServerRepository _serverRepository;
-  final _log = Logger('TripInteractor');
+  final Logger _log;
 
   Future<Result<List<Trip>>> getLocalTrips() {
     return _localRepository.getTrips();

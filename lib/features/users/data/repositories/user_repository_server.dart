@@ -5,11 +5,10 @@ import 'package:travel_map/features/users/domain/models/user.dart';
 import 'package:travel_map/shared/result.dart';
 
 class UserRepositoryServer implements UserServerRepository {
-  UserRepositoryServer({required UserApiService apiService})
-    : _apiService = apiService;
+  UserRepositoryServer(this._apiService, this._log);
 
   final UserApiService _apiService;
-  final _log = Logger('UserRepositoryServer');
+  final Logger _log;
 
   @override
   Future<Result<List<User>>> getUsers() async {

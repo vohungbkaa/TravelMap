@@ -4,15 +4,11 @@ import 'package:travel_map/features/users/domain/models/user.dart';
 import 'package:travel_map/shared/result.dart';
 
 class UserInteractor {
-  UserInteractor({
-    required UserLocalRepository localRepository,
-    required UserServerRepository serverRepository,
-  }) : _localRepository = localRepository,
-       _serverRepository = serverRepository;
+  UserInteractor(this._localRepository, this._serverRepository, this._log);
 
   final UserLocalRepository _localRepository;
   final UserServerRepository _serverRepository;
-  final _log = Logger('UserInteractor');
+  final Logger _log;
 
   Future<Result<List<User>>> getLocalUsers() {
     return _localRepository.getUsers();

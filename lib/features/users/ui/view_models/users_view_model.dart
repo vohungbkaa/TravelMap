@@ -10,15 +10,14 @@ import 'package:travel_map/shared/safe_change_notifier.dart';
 enum UsersDataSource { local, remote }
 
 class UsersViewModel extends SafeChangeNotifier {
-  UsersViewModel({required UserInteractor userInteractor})
-    : _userInteractor = userInteractor {
+  UsersViewModel(this._userInteractor, this._log) {
     load = Command0(_load);
     refresh = Command0(_refresh);
     unawaited(load.execute());
   }
 
   final UserInteractor _userInteractor;
-  final _log = Logger('UsersViewModel');
+  final Logger _log;
 
   late final Command0<void> load;
   late final Command0<void> refresh;

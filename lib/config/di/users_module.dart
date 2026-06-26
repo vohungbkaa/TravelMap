@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:travel_map/config/feature_env.dart';
@@ -22,21 +23,22 @@ List<SingleChildWidget> get usersModule {
     ),
     Provider(create: (context) => UserLocalService(database: context.read())),
     Provider(
-      create: (context) =>
-          UserRepositoryLocal(
-                localService: context.read(),
-              )
-              as UserLocalRepository,
+      create: (context) => UserRepositoryLocal(
+        context.read(),
+        context.read<Logger>(),
+      ) as UserLocalRepository,
     ),
     Provider(
-      create: (context) =>
-          UserRepositoryServer(apiService: context.read())
-              as UserServerRepository,
+      create: (context) => UserRepositoryServer(
+        context.read(),
+        context.read<Logger>(),
+      ) as UserServerRepository,
     ),
     Provider(
       create: (context) => UserInteractor(
-        localRepository: context.read(),
-        serverRepository: context.read(),
+        context.read(),
+        context.read(),
+        context.read<Logger>(),
       ),
     ),
   ];

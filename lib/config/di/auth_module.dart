@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:travel_map/config/feature_env.dart';
@@ -17,14 +18,15 @@ List<SingleChildWidget> get authModule {
       ),
     ),
     Provider(
-      create: (context) =>
-          AuthRepositoryServer(apiService: context.read())
-              as AuthServerRepository,
+      create: (context) => AuthRepositoryServer(
+        context.read(),
+        context.read<Logger>(),
+      ) as AuthServerRepository,
     ),
     Provider(
       create: (context) => AuthInteractor(
-        serverRepository: context.read(),
-        tokenProvider: context.read(),
+        context.read(),
+        context.read(),
       ),
     ),
   ];

@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_map/features/trips/domain/interactors/trip_interactor.dart';
 import 'package:travel_map/features/trips/ui/view_models/trips_view_model.dart';
@@ -12,7 +13,8 @@ List<RouteBase> get tripsRoutes {
       builder: (context, state) {
         return ChangeNotifierProvider(
           create: (context) => TripsViewModel(
-            tripInteractor: context.read<TripInteractor>(),
+            context.read(),
+            context.read<Logger>(),
           ),
           child: const TripsScreen(),
         );

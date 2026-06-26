@@ -4,11 +4,7 @@ import 'package:travel_map/shared/network/auth_token_provider.dart';
 import 'package:travel_map/shared/result.dart';
 
 class AuthInteractor {
-  AuthInteractor({
-    required AuthServerRepository serverRepository,
-    required InMemoryAuthTokenProvider tokenProvider,
-  }) : _serverRepository = serverRepository,
-       _tokenProvider = tokenProvider;
+  AuthInteractor(this._serverRepository, this._tokenProvider);
 
   final AuthServerRepository _serverRepository;
   final InMemoryAuthTokenProvider _tokenProvider;

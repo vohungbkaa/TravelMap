@@ -5,11 +5,10 @@ import 'package:travel_map/features/trips/domain/models/trip.dart';
 import 'package:travel_map/shared/result.dart';
 
 class TripRepositoryLocal implements TripLocalRepository {
-  TripRepositoryLocal({required TripLocalService localService})
-    : _localService = localService;
+  TripRepositoryLocal(this._localService, this._log);
 
   final TripLocalService _localService;
-  final _log = Logger('TripRepositoryLocal');
+  final Logger _log;
 
   @override
   Future<Result<List<Trip>>> getTrips() async {

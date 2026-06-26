@@ -5,11 +5,10 @@ import 'package:travel_map/features/auth/domain/models/auth_session.dart';
 import 'package:travel_map/shared/result.dart';
 
 class AuthRepositoryServer implements AuthServerRepository {
-  AuthRepositoryServer({required AuthApiService apiService})
-    : _apiService = apiService;
+  AuthRepositoryServer(this._apiService, this._log);
 
   final AuthApiService _apiService;
-  final _log = Logger('AuthRepositoryServer');
+  final Logger _log;
 
   @override
   Future<Result<AuthSession>> login({
