@@ -16,14 +16,17 @@ class TripInteractorImpl implements TripInteractor {
   final TripServerRepository _serverRepository;
   final Logger _log;
 
+  @override
   Future<Result<List<Trip>>> getLocalTrips() {
     return _localRepository.getTrips();
   }
 
+  @override
   Future<Result<DateTime?>> getLastSyncedAt() {
     return _localRepository.getLastSyncedAt();
   }
 
+  @override
   Future<Result<List<Trip>>> syncTrips() async {
     final remoteResult = await _serverRepository.getTrips();
     switch (remoteResult) {

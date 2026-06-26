@@ -16,6 +16,7 @@ class AuthInteractorImpl implements AuthInteractor {
   final AuthServerRepository _serverRepository;
   final InMemoryAuthTokenProvider _tokenProvider;
 
+  @override
   Future<Result<AuthSession>> login({
     required String username,
     required String password,

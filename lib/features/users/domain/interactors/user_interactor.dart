@@ -14,6 +14,7 @@ class UserInteractorImpl implements UserInteractor {
   final UserServerRepository _serverRepository;
   final Logger _log;
 
+  @override
   Future<Result<List<User>>> getListUser() async {
     // Ưu tiên gọi API trước
     final remoteResult = await _serverRepository.getUsers();
