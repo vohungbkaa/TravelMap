@@ -10,9 +10,6 @@ abstract class BaseApiScreen<VM extends BaseApiViewModel<R, P>, R, P> extends Ba
   // Tham số ban đầu để gọi API
   P? getLoadParam(BuildContext context);
 
-  // Cờ tự động load data khi mở màn hình
-  bool get autoLoad => true;
-
   // Loại loading (Mặc định là full screen Process Loading)
   LoadingType get loadingType => LoadingType.process;
 
@@ -75,17 +72,13 @@ abstract class BaseApiScreen<VM extends BaseApiViewModel<R, P>, R, P> extends Ba
       },
     );
 
-    if (autoLoad) {
-      return InitialLifeCycleTrigger(
-        onInit: () {
-          final param = getLoadParam(context);
-          viewModel.loadData(param: param);
-        },
-        child: bodyContent,
-      );
-    }
-
-    return bodyContent;
+    return InitialLifeCycleTrigger(
+      onInit: () {
+        final param = getLoadParam(context);
+        viewModel.loadData(param: param);
+      },
+      child: bodyContent,
+    );
   }
 }
 

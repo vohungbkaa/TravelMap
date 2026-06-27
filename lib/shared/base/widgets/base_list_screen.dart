@@ -3,7 +3,8 @@ import 'package:travel_map/shared/base/models/loading_type.dart';
 import 'package:travel_map/shared/base/viewmodels/base_list_view_model.dart';
 import 'package:travel_map/shared/base/widgets/base_api_screen.dart';
 
-abstract class BaseListScreen<VM extends BaseListViewModel<T, P>, T, P> extends BaseApiScreen<VM, List<T>, P> {
+abstract class BaseListScreen<VM extends BaseListViewModel<T, P>, T, P>
+    extends BaseApiScreen<VM, List<T>, P> {
   const BaseListScreen({super.key});
 
   int get shimmerItemCount => 5;
@@ -13,7 +14,11 @@ abstract class BaseListScreen<VM extends BaseListViewModel<T, P>, T, P> extends 
     return ListTile(
       leading: const CircleAvatar(backgroundColor: Colors.black12),
       title: Container(height: 16, color: Colors.black12),
-      subtitle: Container(height: 14, color: Colors.black12, margin: const EdgeInsets.only(top: 8, right: 40)),
+      subtitle: Container(
+        height: 14,
+        color: Colors.black12,
+        margin: const EdgeInsets.only(top: 8, right: 40),
+      ),
     );
   }
 
