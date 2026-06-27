@@ -7,7 +7,7 @@ abstract class BaseListScreen<VM extends BaseListViewModel<T, P>, T, P>
     extends BaseApiScreen<VM, List<T>, P> {
   const BaseListScreen({super.key});
 
-  int get shimmerItemCount => 5;
+  int get shimmerItemCount => 15;
 
   // Giao diện Shimmer cho 1 item (class con có thể override để vẽ bộ xương đẹp hơn)
   Widget buildShimmerItem(BuildContext context) {

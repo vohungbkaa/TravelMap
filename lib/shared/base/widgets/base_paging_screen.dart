@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_map/shared/base/models/loading_type.dart';
 import 'package:travel_map/shared/base/models/paging_param.dart';
 import 'package:travel_map/shared/base/viewmodels/base_paging_view_model.dart';
 import 'package:travel_map/shared/base/widgets/base_list_screen.dart';
@@ -33,6 +34,9 @@ abstract class BasePagingScreen<VM extends BasePagingViewModel<T, P>, T, P exten
                 valueListenable: viewModel.isLoadingMore,
                 builder: (context, isLoadingMore, _) {
                   if (isLoadingMore) {
+                    if (loadingType == LoadingType.shimmer) {
+                      return buildShimmerItem(context);
+                    }
                     return const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Center(
