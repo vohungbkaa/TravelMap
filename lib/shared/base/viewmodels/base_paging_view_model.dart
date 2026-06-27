@@ -7,6 +7,13 @@ abstract class BasePagingViewModel<T, P extends PagingParam> extends BaseListVie
   final ValueNotifier<bool> isLoadingMore = ValueNotifier(false);
   bool hasNext = false;
 
+  // Cấu hình kích thước trang mặc định (Subclass có thể override để đổi)
+  int get defaultPageSize => 20;
+
+  // Cung cấp thuộc tính lấy nhanh trang hiện tại và kích thước trang
+  int get pageIndex => paramRequest?.pageIndex ?? 1;
+  int get pageSize => paramRequest?.pageSize ?? defaultPageSize;
+
   @override
   Future<void> loadData({P? param, bool isPullToRefresh = false}) async {
     hasNext = false;
@@ -51,11 +58,24 @@ abstract class BasePagingViewModel<T, P extends PagingParam> extends BaseListVie
   }
 
   @override
-  Future<Result<List<T>>> getData(P? param) {
-    return getListPagingData(param);
+  Future<Result<List<T>>> getData(P? param) async {
+    final result = await getListPagingData(param);
+    if (result is Ok<List<T>>) {
+      final newItems = await mappingResponse(result.value);
+      if (isLoadingMore.value) {
+        // Tự động append nếu đang loadMore
+        response.value = [...(response.value ?? []), ...newItems];
+      } else {
+        // Tự động set nếu là trang 1 / refresh
+        response.value = newItems;
+      }
+      final pSize = param?.pageSize ?? defaultPageSize;
+      hasNext = result.value.length >= pSize;
+    }
+    return result;
   }
 
-  // Class con thực thi hàm này để lấy data theo trang
+  // Class con CHỈ CẦN implement duy nhất 1 hàm này!
   Future<Result<List<T>>> getListPagingData(P? param);
 
   @override

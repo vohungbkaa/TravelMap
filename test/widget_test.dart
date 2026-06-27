@@ -74,7 +74,7 @@ class _FakeUserServerRepository implements UserServerRepository {
       Completer<Result<List<User>>>();
 
   @override
-  Future<Result<List<User>>> getUsers() {
+  Future<Result<List<User>>> getUsers({int? since, int? perPage}) {
     return _remoteSyncCompleter.future;
   }
 

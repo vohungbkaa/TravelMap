@@ -11,9 +11,10 @@ class UserServerRepositoryImpl implements UserServerRepository {
   final Logger _log;
 
   @override
-  Future<Result<List<User>>> getUsers() async {
+  Future<Result<List<User>>> getUsers({int? since, int? perPage}) async {
     try {
-      return Ok(await _apiService.getUsers());
+      final data = await _apiService.getUsers(since: since, perPage: perPage);
+      return Ok(data);
     } on Object catch (error, stackTrace) {
       _log.warning('Failed to load remote users', error, stackTrace);
       return Error(error, stackTrace);

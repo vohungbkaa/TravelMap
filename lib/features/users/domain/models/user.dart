@@ -13,19 +13,17 @@ class User {
     required this.city,
   });
 
+  // Map dữ liệu từ API GitHub về các cột SQLite tương ứng để không phải đổi Schema
   factory User.fromApiJson(Map<String, dynamic> json) {
-    final address = json['address'] as Map<String, dynamic>? ?? {};
-    final company = json['company'] as Map<String, dynamic>? ?? {};
-
     return User(
       id: json['id'] as int,
-      name: json['name'] as String? ?? '',
-      username: json['username'] as String? ?? '',
-      email: json['email'] as String? ?? '',
-      phone: json['phone'] as String? ?? '',
-      website: json['website'] as String? ?? '',
-      company: company['name'] as String? ?? '',
-      city: address['city'] as String? ?? '',
+      name: json['login'] as String? ?? '',
+      username: json['login'] as String? ?? '',
+      email: json['html_url'] as String? ?? '', // Dùng html_url thay cho email
+      phone: json['type'] as String? ?? 'User',  // Dùng type (User/Organization) cho phone
+      website: json['avatar_url'] as String? ?? '', // Dùng avatar_url cho website
+      company: 'GitHub Inc',
+      city: 'Open Source',
     );
   }
 

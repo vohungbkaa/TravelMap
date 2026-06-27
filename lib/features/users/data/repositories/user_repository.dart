@@ -10,5 +10,5 @@ abstract interface class UserLocalRepository {
 }
 
 abstract interface class UserServerRepository {
-  Future<Result<List<User>>> getUsers();
+  Future<Result<List<User>>> getUsers({int? since, int? perPage});
 }

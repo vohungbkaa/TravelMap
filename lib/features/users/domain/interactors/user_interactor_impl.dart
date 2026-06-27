@@ -15,8 +15,8 @@ class UserInteractorImpl implements UserInteractor {
   }
 
   @override
-  Future<Result<List<User>>> syncUsers() async {
-    final remoteResult = await _serverRepository.getUsers();
+  Future<Result<List<User>>> syncUsers({int? since, int? perPage}) async {
+    final remoteResult = await _serverRepository.getUsers(since: since, perPage: perPage);
     if (remoteResult is Ok<List<User>>) {
       await _localRepository.saveUsers(remoteResult.value);
       // Đọc lại từ DB để đảm bảo luồng SSOT (Single Source of Truth)
