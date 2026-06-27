@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:travel_map/features/trips/domain/models/trip.dart';
 import 'package:travel_map/features/trips/ui/view_models/trips_view_model.dart';
 import 'package:travel_map/features/users/ui/widgets/users_screen.dart';
+import 'package:travel_map/shared/l10n/app_strings.dart';
 
 class TripsScreen extends StatelessWidget {
   const TripsScreen({super.key});
@@ -18,15 +19,15 @@ class TripsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trips'),
+        title: const Text(AppStrings.tripsTitle),
         actions: [
           IconButton(
-            tooltip: 'Users',
+            tooltip: AppStrings.usersTooltip,
             onPressed: () => context.goNamed(UsersScreen.routeName),
             icon: const Icon(Icons.people_outline),
           ),
           IconButton(
-            tooltip: 'Refresh',
+            tooltip: AppStrings.refreshTooltip,
             onPressed: viewModel.fetchTrips,
             icon: const Icon(Icons.sync_outlined),
           ),
@@ -51,11 +52,11 @@ class TripsScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.route_outlined, size: 48),
                       const SizedBox(height: 16),
-                      const Text('Không có dữ liệu chuyến đi'),
+                      const Text(AppStrings.noTripData),
                       FilledButton.icon(
                         onPressed: viewModel.fetchTrips,
                         icon: const Icon(Icons.sync),
-                        label: const Text('Thử lại'),
+                        label: const Text(AppStrings.retry),
                       ),
                     ],
                   ),
@@ -85,9 +86,11 @@ class TripsScreen extends StatelessWidget {
                         ),
                       ),
                       title: Text(trip.title),
-                      subtitle: Text('Owner user #${trip.ownerUserId}'),
+                      subtitle: Text(AppStrings.tripOwner(trip.ownerUserId)),
                       trailing: Text(
-                        isCompleted ? 'Done' : 'Planned',
+                        isCompleted
+                            ? AppStrings.tripStatusDone
+                            : AppStrings.tripStatusPlanned,
                         style: theme.textTheme.labelMedium,
                       ),
                     );

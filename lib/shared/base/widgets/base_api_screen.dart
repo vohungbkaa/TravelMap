@@ -3,6 +3,7 @@ import 'package:travel_map/shared/base/models/loading_type.dart';
 import 'package:travel_map/shared/base/viewmodels/base_api_view_model.dart';
 import 'package:travel_map/shared/base/widgets/base_screen.dart';
 import 'package:travel_map/shared/base/widgets/travel_map_loader.dart';
+import 'package:travel_map/shared/l10n/app_strings.dart';
 
 abstract class BaseApiScreen<VM extends BaseApiViewModel<R, P>, R, P> extends BaseScreen<VM> {
   const BaseApiScreen({super.key});
@@ -24,10 +25,10 @@ abstract class BaseApiScreen<VM extends BaseApiViewModel<R, P>, R, P> extends Ba
         children: [
           const Icon(Icons.info_outline, size: 48, color: Colors.grey),
           const SizedBox(height: 16),
-          const Text('Không có dữ liệu'),
+          const Text(AppStrings.noData),
           TextButton(
             onPressed: () => viewModel.loadData(),
-            child: const Text('Thử lại'),
+            child: const Text(AppStrings.retry),
           ),
         ],
       ),

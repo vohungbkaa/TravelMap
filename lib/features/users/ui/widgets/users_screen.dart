@@ -7,6 +7,7 @@ import 'package:travel_map/features/users/ui/view_models/users_view_model.dart';
 import 'package:travel_map/shared/base/models/loading_type.dart';
 import 'package:travel_map/shared/base/models/paging_param.dart';
 import 'package:travel_map/shared/base/widgets/base_paging_screen.dart';
+import 'package:travel_map/shared/l10n/app_strings.dart';
 
 class UsersScreen
     extends BasePagingScreen<UsersViewModel, User, DefaultPagingParam> {
@@ -32,15 +33,15 @@ class UsersScreen
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {
     return AppBar(
-      title: const Text('GitHub Users'),
+      title: const Text(AppStrings.githubUsersTitle),
       actions: [
         IconButton(
-          tooltip: 'Trips',
+          tooltip: AppStrings.tripsTooltip,
           onPressed: () => context.goNamed(TripsScreen.routeName),
           icon: const Icon(Icons.route_outlined),
         ),
         IconButton(
-          tooltip: 'Refresh',
+          tooltip: AppStrings.refreshTooltip,
           onPressed: () =>
               getViewModel(context).loadData(isPullToRefresh: true),
           icon: const Icon(Icons.sync_outlined),
@@ -63,7 +64,13 @@ class UsersScreen
             : null,
       ),
       title: Text(user.name),
-      subtitle: Text('${user.email}\nType: ${user.phone} • City: ${user.city}'),
+      subtitle: Text(
+        AppStrings.userDetails(
+          email: user.email,
+          phone: user.phone,
+          city: user.city,
+        ),
+      ),
       isThreeLine: true,
     );
   }
