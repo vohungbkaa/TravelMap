@@ -58,7 +58,7 @@ abstract class BasePagingViewModel<T, P extends PagingParam> extends BaseListVie
   }
 
   @override
-  Future<Result<List<T>>> getData(P? param) async {
+  Future<Result<List<T>>> getListData(P? param) async {
     final result = await getListPagingData(param);
     if (result is Ok<List<T>>) {
       final newItems = await mappingResponse(result.value);

@@ -48,12 +48,14 @@ class UsersScreen
 
   @override
   Widget buildItem(BuildContext context, User user) {
+    final bool hasValidAvatar =
+        user.website.startsWith('http://') || user.website.startsWith('https://');
+
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: user.website.isNotEmpty
-            ? NetworkImage(user.website)
-            : null,
-        child: user.website.isEmpty
+        backgroundImage:
+            hasValidAvatar ? NetworkImage(user.website) : null,
+        child: !hasValidAvatar
             ? Text(user.name.isEmpty ? '?' : user.name[0].toUpperCase())
             : null,
       ),

@@ -11,11 +11,11 @@ class UsersViewModel extends BasePagingViewModel<User, DefaultPagingParam> {
   final UserInteractor _userInteractor;
   final Logger _log;
 
+  int get lastId => pageIndex == 1 ? 0 : (items.lastOrNull?.id ?? 0);
 
   @override
   Future<Result<List<User>>> getListPagingData(DefaultPagingParam? param) {
     _log.info('Fetching users page $pageIndex');
-    final lastId = pageIndex == 1 ? 0 : (response.value?.lastOrNull?.id ?? 0);
     return _userInteractor.syncUsers(since: lastId, perPage: pageSize);
   }
 }
