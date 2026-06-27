@@ -27,26 +27,7 @@ class UsersScreen
   LoadingType get loadingType => LoadingType.shimmer;
 
   @override
-  Widget buildShimmerItem(BuildContext context) {
-    return ListTile(
-      leading: const CircleAvatar(backgroundColor: Colors.black12),
-      title: Container(
-        height: 16,
-        width: 120,
-        margin: const EdgeInsets.only(bottom: 4),
-        color: Colors.black12,
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(height: 12, width: 180, color: Colors.black12),
-          const SizedBox(height: 4),
-          Container(height: 12, width: 140, color: Colors.black12),
-        ],
-      ),
-      isThreeLine: true,
-    );
-  }
+  int get shimmerItemCount => 15;
 
   @override
   PreferredSizeWidget? buildAppBar(BuildContext context) {

@@ -2,23 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:travel_map/shared/base/models/loading_type.dart';
 import 'package:travel_map/shared/base/viewmodels/base_list_view_model.dart';
 import 'package:travel_map/shared/base/widgets/base_api_screen.dart';
+import 'package:travel_map/shared/widgets/shimmer_placeholder.dart';
 
 abstract class BaseListScreen<VM extends BaseListViewModel<T, P>, T, P>
     extends BaseApiScreen<VM, List<T>, P> {
   const BaseListScreen({super.key});
 
-  int get shimmerItemCount => 15;
+  int get shimmerItemCount => 10;
 
-  // Giao diện Shimmer cho 1 item (class con có thể override để vẽ bộ xương đẹp hơn)
+  // Giao diện Shimmer cho 1 item (class con có thể override nếu muốn custom riêng)
   Widget buildShimmerItem(BuildContext context) {
-    return ListTile(
-      leading: const CircleAvatar(backgroundColor: Colors.black12),
-      title: Container(height: 16, color: Colors.black12),
-      subtitle: Container(
-        height: 14,
-        color: Colors.black12,
-        margin: const EdgeInsets.only(top: 8, right: 40),
+    return const ListTile(
+      leading: ShimmerPlaceholder.circular(radius: 20),
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: ShimmerPlaceholder(height: 16, width: 120, borderRadius: 4),
       ),
+      subtitle: Padding(
+        padding: EdgeInsets.only(top: 6.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ShimmerPlaceholder(height: 12, width: 180, borderRadius: 4),
+            SizedBox(height: 6),
+            ShimmerPlaceholder(height: 12, width: 140, borderRadius: 4),
+          ],
+        ),
+      ),
+      isThreeLine: true,
     );
   }
 
