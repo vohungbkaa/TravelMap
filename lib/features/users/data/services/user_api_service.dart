@@ -1,25 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:travel_map/features/users/domain/models/user.dart';
 
-class UserApiService {
-  const UserApiService(this._dio);
-  final Dio _dio;
+part 'user_api_service.g.dart';
 
-  Future<List<User>> getUsers({int? since, int? perPage}) async {
-    final response = await _dio.get(
-      'https://api.github.com/users',
-      queryParameters: {
-        if (since != null) 'since': since,
-        if (perPage != null) 'per_page': perPage,
-      },
-    );
-    
-    final list = response.data as List;
-    return list.map((json) => User.fromApiJson(json as Map<String, dynamic>)).toList();
-  }
+@RestApi()
+abstract class UserApiService {
+  factory UserApiService(Dio dio) = _UserApiService;
 
-  Future<User> getUserById(int userId) async {
-    final response = await _dio.get('https://api.github.com/user/$userId');
-    return User.fromApiJson(response.data as Map<String, dynamic>);
-  }
+  @GET('/users')
+  Future<List<User>> getUsers({
+    @Query('since') int? since,
+    @Query('per_page') int? perPage,
+  });
+
+  @GET('/user/{id}')
+  Future<User> getUserById(@Path('id') int userId);
 }

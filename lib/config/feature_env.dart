@@ -27,7 +27,10 @@ class FeatureEnv {
 
 enum FeatureConfig {
   auth(FeatureEnv()),
-  user(FeatureEnv()),
+  user(FeatureEnv(
+    testUrl: 'https://api.github.com',
+    releaseUrl: 'https://api.github.com',
+  )),
   trip(FeatureEnv());
 
   const FeatureConfig(this.env);
