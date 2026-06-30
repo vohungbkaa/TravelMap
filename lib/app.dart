@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_map/routing/router.dart';
+import 'package:travel_map/shared/theme/app_theme.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -7,13 +8,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Travel Map',
+      title: 'Tiến Thắng Travel',
       debugShowCheckedModeBanner: false,
       routerConfig: router(),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF146C94)),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
     );
   }
 }
