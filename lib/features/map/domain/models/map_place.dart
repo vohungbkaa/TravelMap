@@ -30,6 +30,9 @@ class MapPlace {
     required this.rating,
     required this.reviewCount,
     required this.openHours,
+    this.markerIconKey,
+    this.markerIconUrl,
+    this.markerColor,
   });
 
   final String id;
@@ -48,4 +51,7 @@ class MapPlace {
   final double rating;
   final int reviewCount;
   final String openHours;
+  final String? markerIconKey;
+  final String? markerIconUrl;
+  final String? markerColor;
 }

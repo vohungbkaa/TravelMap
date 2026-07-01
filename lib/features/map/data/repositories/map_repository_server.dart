@@ -1,177 +1,174 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 import 'package:travel_map/features/map/data/repositories/map_repository.dart';
 import 'package:travel_map/features/map/domain/models/map_place.dart';
 import 'package:travel_map/shared/result.dart';
 
 class MapServerRepositoryImpl implements MapServerRepository {
-  MapServerRepositoryImpl(this._log);
+  MapServerRepositoryImpl(this._log, {Dio? dio})
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              baseUrl: _apiBaseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 10),
+              sendTimeout: const Duration(seconds: 10),
+              headers: const {'Accept': 'application/json'},
+            ),
+          );
+
+  static final String _apiBaseUrl = () {
+    const envUrl = String.fromEnvironment('TRAVEL_SOCIAL_API_BASE_URL');
+    if (envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    try {
+      if (Platform.isAndroid) {
+        return 'http://10.0.2.2:3000/api/v1';
+      }
+    } catch (_) {
+      // Fallback if Platform is not supported (e.g. Web)
+    }
+    return 'http://127.0.0.1:3000/api/v1';
+  }();
 
   final Logger _log;
+  final Dio _dio;
+
+  Uri get _apiBaseUri => Uri.parse(_apiBaseUrl);
 
   @override
   Future<Result<List<MapPlace>>> getPlaces() async {
     try {
-      await Future<void>.delayed(const Duration(milliseconds: 300));
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/areas/tien-thang/places',
+      );
+      final payload = response.data?['data'];
+      final rows = payload is List ? payload : const <dynamic>[];
+      final places = rows
+          .whereType<Map<String, dynamic>>()
+          .map(_mapPlace)
+          .where((place) => place.latitude != 0 && place.longitude != 0)
+          .toList(growable: false);
 
-      const sampleVideoUrl =
-          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4';
-
-      const mockPlaces = [
-        MapPlace(
-          id: 'm1',
-          title: 'Đình Làng Tiến Thắng',
-          category: 'ditich',
-          address: 'Di tích cấp tỉnh · Thế kỷ XVIII',
-          distance: '2.1km',
-          distanceKm: 2.1,
-          imageUrl:
-              'https://images.unsplash.com/photo-1544717305-2782549b5136?w=500',
-          latitude: 21.0285,
-          longitude: 105.8542,
-          description:
-              'Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-              'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-              'con địa phương qua nhiều thế hệ.Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-                  'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-                  'con địa phương qua nhiều thế hệ.Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-                  'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-                  'con địa phương qua nhiều thế hệ.Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-                  'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-                  'con địa phương qua nhiều thế hệ.Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-                  'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-                  'con địa phương qua nhiều thế hệ.Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-                  'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-                  'con địa phương qua nhiều thế hệ.Là một trong những di tích lịch sử tiêu biểu của xã Tiến '
-                  'Thắng, gắn liền với đời sống văn hoá và tâm linh của bà '
-                  'con địa phương qua nhiều thế hệ.',
-          mediaUrls: [
-            'https://images.unsplash.com/photo-1544717305-2782549b5136?w=500',
-            'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500',
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500',
-          ],
-          mediaItems: [
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1544717305-2782549b5136?w=500',
-            ),
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500',
-              isVideo: true,
-              videoUrl: sampleVideoUrl,
-            ),
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500',
-            ),
-          ],
-          views: '12.4k',
-          rating: 4.8,
-          reviewCount: 96,
-          openHours: '7:00 – 17:30',
-        ),
-        MapPlace(
-          id: 'm2',
-          title: 'Hồ Sen Đầm Sậy',
-          category: 'dulich',
-          address: 'Điểm check-in du lịch mùa hè',
-          distance: '1.4km',
-          distanceKm: 1.4,
-          imageUrl:
-              'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500',
-          latitude: 21.0330,
-          longitude: 105.8480,
-          description:
-              'Khu cảnh quan sinh thái tuyệt đẹp với hàng ngàn đóa sen '
-              'hồng nở rộ mỗi mùa hè. Nơi đây là điểm đến lý tưởng cho '
-              'du khách yêu thích chụp ảnh check-in và tận hưởng thiên nhiên.',
-          mediaUrls: [
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500',
-            'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
-          ],
-          mediaItems: [
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500',
-              isVideo: true,
-              videoUrl: sampleVideoUrl,
-            ),
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
-            ),
-          ],
-          views: '18.9k',
-          rating: 4.9,
-          reviewCount: 142,
-          openHours: '6:00 – 18:00',
-        ),
-        MapPlace(
-          id: 'm3',
-          title: 'Vườn Nhãn HTX',
-          category: 'dacsan',
-          address: 'Vùng nguyên liệu nhãn lồng',
-          distance: '0.9km',
-          distanceKm: 0.9,
-          imageUrl:
-              'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
-          latitude: 21.0220,
-          longitude: 105.8600,
-          description:
-              'Vùng canh tác nhãn đặc sản ngọt thơm được trồng và chăm sóc '
-              'theo quy trình VietGAP bởi Hợp tác xã Tiến Thắng. Du khách '
-              'có thể tự tay hái trái chín làm quà.',
-          mediaUrls: [
-            'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
-          ],
-          mediaItems: [
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
-            ),
-          ],
-          views: '8.6k',
-          rating: 4.7,
-          reviewCount: 78,
-          openHours: '7:30 – 17:00',
-        ),
-        MapPlace(
-          id: 'm4',
-          title: 'Chùa Đoài Tiến Thắng',
-          category: 'ditich',
-          address: 'Kiến trúc Phật giáo cổ Bắc Bộ',
-          distance: '3.2km',
-          distanceKm: 3.2,
-          imageUrl:
-              'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500',
-          latitude: 21.0360,
-          longitude: 105.8590,
-          description:
-              'Ngôi chùa cổ kính nằm ẩn mình dưới bóng cây cổ thụ tĩnh mịch. '
-              'Nơi đây lưu giữ nhiều tượng Phật cùng đại hồng chung giá trị, '
-              'là chốn thanh tịnh cho du khách bái Phật.',
-          mediaUrls: [
-            'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500',
-          ],
-          mediaItems: [
-            MapMediaItem(
-              url:
-                  'https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=500',
-              isVideo: true,
-              videoUrl: sampleVideoUrl,
-            ),
-          ],
-          views: '15.2k',
-          rating: 4.8,
-          reviewCount: 110,
-          openHours: '6:30 – 18:00',
-        ),
-      ];
-
-      return const Ok(mockPlaces);
+      return Ok(places);
     } on Object catch (error, stackTrace) {
       _log.warning('Failed to load map places', error, stackTrace);
       return Error(error, stackTrace);
     }
+  }
+
+  MapPlace _mapPlace(Map<String, dynamic> json) {
+    final category = _asMap(json['category']);
+    final placeMarkerIcon = _asMap(json['markerIcon']);
+    final categoryMarkerIcon = _asMap(category?['markerIcon']);
+    final markerIcon = placeMarkerIcon ?? categoryMarkerIcon;
+    final images = _asList(json['images']);
+    final firstImage = images.isNotEmpty ? _asMap(images.first) : null;
+    final coverUrl = _resolveMediaUrl(_asString(json['coverUrl']));
+    final imageUrl =
+        coverUrl ?? _resolveMediaUrl(_asString(firstImage?['imageUrl'])) ?? '';
+
+    final mediaItems = <MapMediaItem>[
+      if (imageUrl.isNotEmpty) MapMediaItem(url: imageUrl),
+      ...images
+          .whereType<Map<String, dynamic>>()
+          .map((image) => _resolveMediaUrl(_asString(image['imageUrl'])))
+          .whereType<String>()
+          .where((url) => url != imageUrl)
+          .map((url) => MapMediaItem(url: url)),
+      if (_resolveMediaUrl(_asString(json['videoUrl'])) case final videoUrl?)
+        MapMediaItem(
+          url: imageUrl,
+          thumbnailUrl: imageUrl,
+          isVideo: true,
+          videoUrl: videoUrl,
+        ),
+    ];
+
+    final mediaUrls = mediaItems
+        .map((item) => item.isVideo ? item.thumbnailUrl ?? item.url : item.url)
+        .where((url) => url.isNotEmpty)
+        .toList(growable: false);
+
+    return MapPlace(
+      id: _asString(json['id']) ?? '',
+      title: _asString(json['name']) ?? '',
+      category: _asString(category?['name']) ?? 'Chưa phân loại',
+      address: _asString(json['address']) ?? '',
+      distance: '',
+      distanceKm: 0,
+      imageUrl: imageUrl,
+      latitude: _asDouble(json['latitude']),
+      longitude: _asDouble(json['longitude']),
+      description:
+          _asString(json['description']) ?? _asString(json['summary']) ?? '',
+      mediaUrls: mediaUrls,
+      mediaItems: mediaItems,
+      views: _formatCount(_asInt(json['postCount'])),
+      rating: _asDouble(json['ratingAvg']),
+      reviewCount: _asInt(json['ratingCount']),
+      openHours: _asString(json['bestTime']) ?? '',
+      markerIconKey:
+          _asString(markerIcon?['key']) ?? _asString(category?['icon']),
+      markerIconUrl:
+          _resolveMediaUrl(_asString(markerIcon?['iconUrl'])) ??
+          _resolveMediaUrl(_asString(category?['iconUrl'])),
+      markerColor:
+          _asString(markerIcon?['markerColor']) ??
+          _asString(category?['markerColor']),
+    );
+  }
+
+  String? _resolveMediaUrl(String? url) {
+    if (url == null || url.isEmpty) return null;
+    final uri = Uri.tryParse(url);
+    if (uri != null && uri.hasScheme) {
+      if (uri.host == 'localhost' || uri.host == '127.0.0.1') {
+        return uri
+            .replace(host: _apiBaseUri.host, port: _apiBaseUri.port)
+            .toString();
+      }
+      return url;
+    }
+    final origin = _apiBaseUri.replace(path: '', query: '', fragment: '');
+    if (url.startsWith('/')) {
+      return origin.resolve(url).toString();
+    }
+    return origin.resolve('/$url').toString();
+  }
+
+  Map<String, dynamic>? _asMap(Object? value) {
+    return value is Map<String, dynamic> ? value : null;
+  }
+
+  List<dynamic> _asList(Object? value) {
+    return value is List ? value : const [];
+  }
+
+  String? _asString(Object? value) {
+    if (value == null) return null;
+    final stringValue = value.toString();
+    return stringValue.isEmpty ? null : stringValue;
+  }
+
+  double _asDouble(Object? value) {
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  int _asInt(Object? value) {
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  String _formatCount(int value) {
+    if (value >= 1000) {
+      return '${(value / 1000).toStringAsFixed(1)}k';
+    }
+    return value.toString();
   }
 }

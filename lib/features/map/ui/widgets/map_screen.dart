@@ -282,8 +282,8 @@ class _MapContentViewState extends State<_MapContentView> {
                 final isSelected = viewModel.selectedPlace?.id == place.id;
                 return Marker(
                   point: LatLng(place.latitude, place.longitude),
-                  width: isSelected ? 150 : 48,
-                  height: isSelected ? 110 : 48,
+                  width: isSelected ? 150 : 54,
+                  height: isSelected ? 116 : 54,
                   alignment: isSelected
                       ? Alignment.bottomCenter
                       : Alignment.center,
@@ -573,8 +573,9 @@ class _MapContentViewState extends State<_MapContentView> {
                             boxShadow: isSelected
                                 ? [
                                     BoxShadow(
-                                      color: AppColors.primary
-                                          .withValues(alpha: 0.25),
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.25,
+                                      ),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
                                     ),
@@ -592,14 +593,14 @@ class _MapContentViewState extends State<_MapContentView> {
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
                                       Container(
-                                    width: 80,
-                                    height: 80,
-                                    color: AppColors.muted,
-                                    child: const Icon(
-                                      LucideIcons.map,
-                                      color: AppColors.mutedForeground,
-                                    ),
-                                  ),
+                                        width: 80,
+                                        height: 80,
+                                        color: AppColors.muted,
+                                        child: const Icon(
+                                          LucideIcons.map,
+                                          color: AppColors.mutedForeground,
+                                        ),
+                                      ),
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -699,16 +700,18 @@ class _MapContentViewState extends State<_MapContentView> {
   }
 
   Widget _buildMarkerWidget(MapPlace place, bool isSelected) {
-    final catColor = _getCategoryColor(place.category);
+    final markerColor = _getMarkerColor(place);
+    final markerSize = isSelected ? 50.0 : 44.0;
+    final borderWidth = isSelected ? 3.0 : 2.0;
 
     final avatarWidget = Container(
-      width: isSelected ? 44 : 38,
-      height: isSelected ? 44 : 38,
+      width: markerSize,
+      height: markerSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: isSelected ? AppColors.primary : catColor,
-          width: isSelected ? 3 : 2,
+          color: isSelected ? AppColors.primary : markerColor,
+          width: borderWidth,
         ),
         boxShadow: [
           BoxShadow(
@@ -718,21 +721,7 @@ class _MapContentViewState extends State<_MapContentView> {
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(22),
-        child: Image.network(
-          place.imageUrl,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => ColoredBox(
-            color: catColor,
-            child: const Icon(
-              LucideIcons.mapPin,
-              color: Colors.white,
-              size: 16,
-            ),
-          ),
-        ),
-      ),
+      child: _buildMarkerIcon(place, markerColor, markerSize, borderWidth),
     );
 
     if (!isSelected) {
@@ -787,16 +776,92 @@ class _MapContentViewState extends State<_MapContentView> {
     );
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case 'ditich':
-        return AppColors.primary;
-      case 'dulich':
-        return AppColors.accent;
-      case 'dacsan':
-        return AppColors.gold;
+  Widget _buildMarkerIcon(
+    MapPlace place,
+    Color markerColor,
+    double markerSize,
+    double borderWidth,
+  ) {
+    final iconUrl = place.markerIconUrl;
+    if (_isUploadedMarkerImage(iconUrl)) {
+      final imageSize = markerSize - (borderWidth * 2) - 2;
+      return Center(
+        child: ClipOval(
+          child: Image.network(
+            iconUrl!,
+            width: imageSize,
+            height: imageSize,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) =>
+                _buildFallbackMarkerIcon(place, markerColor),
+          ),
+        ),
+      );
+    }
+
+    return _buildFallbackMarkerIcon(place, markerColor);
+  }
+
+  Widget _buildFallbackMarkerIcon(MapPlace place, Color markerColor) {
+    return ColoredBox(
+      color: markerColor,
+      child: Icon(
+        _getMarkerIconData(place.markerIconKey),
+        color: Colors.white,
+        size: 22,
+      ),
+    );
+  }
+
+  bool _isUploadedMarkerImage(String? url) {
+    if (url == null || url.isEmpty) return false;
+    final lowerUrl = url.toLowerCase();
+    if (lowerUrl.endsWith('.svg') || lowerUrl.contains('api.iconify.design')) {
+      return false;
+    }
+    return lowerUrl.contains('/media/') ||
+        lowerUrl.contains('/uploads/') ||
+        lowerUrl.endsWith('.png') ||
+        lowerUrl.endsWith('.jpg') ||
+        lowerUrl.endsWith('.jpeg') ||
+        lowerUrl.endsWith('.webp');
+  }
+
+  Color _getMarkerColor(MapPlace place) {
+    final color = place.markerColor;
+    if (color != null && RegExp(r'^#[0-9a-fA-F]{6}$').hasMatch(color)) {
+      return Color(int.parse(color.substring(1), radix: 16) + 0xFF000000);
+    }
+
+    return AppColors.primary;
+  }
+
+  IconData _getMarkerIconData(String? key) {
+    switch (key) {
+      case 'landmark':
+        return LucideIcons.landmark;
+      case 'utensils':
+        return LucideIcons.utensils;
+      case 'masks-theater':
+        return LucideIcons.theater;
+      case 'monument':
+        return LucideIcons.bookOpen;
+      case 'calendar-days':
+        return LucideIcons.calendarDays;
+      case 'campground':
+        return LucideIcons.tent;
+      case 'hotel':
+        return LucideIcons.hotel;
+      case 'store':
+        return LucideIcons.store;
+      case 'camera':
+        return LucideIcons.camera;
+      case 'tree-palm':
+        return LucideIcons.treePalm;
+      case 'mountain':
+        return LucideIcons.mountain;
       default:
-        return AppColors.primary;
+        return LucideIcons.mapPin;
     }
   }
 }
