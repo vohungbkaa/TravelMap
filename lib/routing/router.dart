@@ -3,6 +3,8 @@ import 'package:travel_map/features/map/domain/models/map_place.dart';
 import 'package:travel_map/features/map/ui/widgets/map_screen.dart';
 import 'package:travel_map/features/map/ui/widgets/place_detail_screen.dart';
 import 'package:travel_map/features/news/ui/widgets/news_screen.dart';
+import 'package:travel_map/features/shop/domain/models/shop_product.dart';
+import 'package:travel_map/features/shop/ui/widgets/product_detail_screen.dart';
 import 'package:travel_map/features/shop/ui/widgets/shop_screen.dart';
 import 'package:travel_map/routing/main_shell.dart';
 import 'package:travel_map/routing/trips_routes.dart';
@@ -52,6 +54,14 @@ GoRouter router() {
         builder: (context, state) {
           final place = state.extra as MapPlace;
           return PlaceDetailScreen(place: place);
+        },
+      ),
+      GoRoute(
+        path: ProductDetailScreen.routePath,
+        name: ProductDetailScreen.routeName,
+        builder: (context, state) {
+          final product = state.extra as ShopProduct;
+          return ProductDetailScreen(product: product);
         },
       ),
       ...usersRoutes,

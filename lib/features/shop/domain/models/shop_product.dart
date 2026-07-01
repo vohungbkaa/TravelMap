@@ -6,6 +6,7 @@ class ShopProduct {
   final String rating;
   final String imageUrl;
   final String category;
+  final String description;
   final bool isOcop;
 
   const ShopProduct({
@@ -16,6 +17,7 @@ class ShopProduct {
     required this.rating,
     required this.imageUrl,
     required this.category,
+    required this.description,
     this.isOcop = true,
   });
 }

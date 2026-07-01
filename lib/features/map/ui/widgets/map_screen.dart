@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:travel_map/shared/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
@@ -125,9 +126,9 @@ class _MapContentViewState extends State<_MapContentView> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Tùy chọn giao diện bản đồ',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: AppTypography.s17, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 _buildStyleOptionTile(
@@ -191,14 +192,14 @@ class _MapContentViewState extends State<_MapContentView> {
       title: Text(
         title,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: AppTypography.s14,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           color: isSelected ? AppColors.primary : AppColors.foreground,
         ),
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 12, color: AppColors.mutedForeground),
+        style: TextStyle(fontSize: AppTypography.s12, color: AppColors.mutedForeground),
       ),
       trailing: isSelected
           ? const Icon(
@@ -227,7 +228,7 @@ class _MapContentViewState extends State<_MapContentView> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: AppTypography.s14,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected ? AppColors.primary : AppColors.foreground,
               ),
@@ -330,14 +331,14 @@ class _MapContentViewState extends State<_MapContentView> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: TextField(
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: AppTypography.s14,
                           color: AppColors.foreground,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Tìm di tích, điểm du lịch...',
                           hintStyle: TextStyle(
-                            fontSize: 13,
+                            fontSize: AppTypography.s13,
                             color: AppColors.mutedForeground,
                           ),
                           border: InputBorder.none,
@@ -533,11 +534,11 @@ class _MapContentViewState extends State<_MapContentView> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: AppColors.softShadow,
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
                         'Không tìm thấy địa điểm phù hợp trong phạm vi',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: AppTypography.s14,
                           color: AppColors.mutedForeground,
                         ),
                       ),
@@ -612,7 +613,7 @@ class _MapContentViewState extends State<_MapContentView> {
                                       place.title,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14,
+                                        fontSize: AppTypography.s14,
                                         color: isSelected
                                             ? AppColors.primary
                                             : AppColors.foreground,
@@ -623,8 +624,8 @@ class _MapContentViewState extends State<_MapContentView> {
                                     const SizedBox(height: 2),
                                     Text(
                                       place.address,
-                                      style: const TextStyle(
-                                        fontSize: 12,
+                                      style: TextStyle(
+                                        fontSize: AppTypography.s12,
                                         color: AppColors.mutedForeground,
                                       ),
                                       maxLines: 1,
@@ -641,8 +642,8 @@ class _MapContentViewState extends State<_MapContentView> {
                                         const SizedBox(width: 4),
                                         Text(
                                           place.distance,
-                                          style: const TextStyle(
-                                            fontSize: 12,
+                                          style: TextStyle(
+                                            fontSize: AppTypography.s12,
                                             fontWeight: FontWeight.bold,
                                             color: AppColors.accent,
                                           ),
@@ -682,7 +683,7 @@ class _MapContentViewState extends State<_MapContentView> {
         ),
         label: Text(label),
         labelStyle: TextStyle(
-          fontSize: 12,
+          fontSize: AppTypography.s12,
           fontWeight: FontWeight.w600,
           color: isSelected ? Colors.white : AppColors.foreground,
         ),
@@ -761,8 +762,8 @@ class _MapContentViewState extends State<_MapContentView> {
             children: [
               Text(
                 place.title,
-                style: const TextStyle(
-                  fontSize: 12,
+                style: TextStyle(
+                  fontSize: AppTypography.s12,
                   fontWeight: FontWeight.bold,
                   color: AppColors.foreground,
                 ),
@@ -772,8 +773,8 @@ class _MapContentViewState extends State<_MapContentView> {
               const SizedBox(height: 1),
               Text(
                 place.distance,
-                style: const TextStyle(
-                  fontSize: 10,
+                style: TextStyle(
+                  fontSize: AppTypography.s10,
                   color: AppColors.accent,
                   fontWeight: FontWeight.w600,
                 ),

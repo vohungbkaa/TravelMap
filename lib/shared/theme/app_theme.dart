@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_map/shared/theme/app_colors.dart';
+import 'package:travel_map/shared/theme/app_typography.dart';
 
 class AppTheme {
   AppTheme._();
@@ -8,7 +9,7 @@ class AppTheme {
     TextStyle? scale(TextStyle? style) {
       if (style == null) return null;
       if (style.fontSize != null) {
-        return style.copyWith(fontSize: style.fontSize! + 1.0);
+        return style.copyWith(fontSize: style.fontSize! * AppTypography.scale);
       }
       return style;
     }
@@ -57,17 +58,17 @@ class AppTheme {
 
     return baseTheme.copyWith(
       textTheme: scaledTextTheme,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
           color: AppColors.foreground,
-          fontSize: 19,
+          fontSize: 19 * AppTypography.scale,
           fontWeight: FontWeight.bold,
         ),
-        iconTheme: IconThemeData(color: AppColors.foreground),
+        iconTheme: const IconThemeData(color: AppColors.foreground),
       ),
       cardTheme: CardThemeData(
         color: AppColors.card,
@@ -85,13 +86,13 @@ class AppTheme {
         selectedColor: AppColors.primary,
         secondarySelectedColor: AppColors.primary,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        labelStyle: const TextStyle(
-          fontSize: 13,
+        labelStyle: TextStyle(
+          fontSize: 13 * AppTypography.scale,
           color: AppColors.foreground,
           fontWeight: FontWeight.w600,
         ),
-        secondaryLabelStyle: const TextStyle(
-          fontSize: 13,
+        secondaryLabelStyle: TextStyle(
+          fontSize: 13 * AppTypography.scale,
           color: Colors.white,
           fontWeight: FontWeight.w600,
         ),
@@ -99,15 +100,15 @@ class AppTheme {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: AppColors.card,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.mutedForeground,
         selectedLabelStyle: TextStyle(
-          fontSize: 12,
+          fontSize: 12 * AppTypography.scale,
           fontWeight: FontWeight.bold,
         ),
-        unselectedLabelStyle: TextStyle(fontSize: 12),
+        unselectedLabelStyle: TextStyle(fontSize: 12 * AppTypography.scale),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),

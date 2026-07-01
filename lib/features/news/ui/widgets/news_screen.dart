@@ -1,13 +1,28 @@
 import 'dart:async';
+import 'package:travel_map/shared/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_map/features/news/domain/models/news_post.dart';
+import 'package:travel_map/features/news/ui/widgets/news_search_screen.dart';
+import 'package:travel_map/features/news/ui/widgets/news_notifications_screen.dart';
+import 'package:travel_map/features/news/ui/widgets/news_create_post_screen.dart';
+import 'package:travel_map/features/news/ui/widgets/news_detail_screen.dart';
 import 'package:travel_map/features/news/ui/view_models/news_view_model.dart';
 import 'package:travel_map/shared/base/models/loading_type.dart';
 import 'package:travel_map/shared/base/models/paging_param.dart';
 import 'package:travel_map/shared/base/widgets/base_paging_screen.dart';
 import 'package:travel_map/shared/theme/app_colors.dart';
+
+IconData _getFilledIcon(IconData outlineIcon) {
+  if (outlineIcon == LucideIcons.heart) return Icons.favorite;
+  if (outlineIcon == LucideIcons.thumbsUp) return Icons.thumb_up;
+  if (outlineIcon == LucideIcons.laugh) return Icons.sentiment_very_satisfied;
+  if (outlineIcon == LucideIcons.partyPopper) return Icons.celebration;
+  if (outlineIcon == LucideIcons.frown) return Icons.sentiment_dissatisfied;
+  if (outlineIcon == LucideIcons.angry) return Icons.mood_bad;
+  return outlineIcon;
+}
 
 class NewsScreen
     extends BasePagingScreen<NewsViewModel, NewsPost, DefaultPagingParam> {
@@ -80,13 +95,13 @@ class NewsScreen
                             ),
                           );
                         }
-                        return const Padding(
+                        return Padding(
                           padding: EdgeInsets.symmetric(vertical: 16),
                           child: Center(
                             child: Text(
                               '— Hết bài mới —',
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: AppTypography.s12,
                                 color: AppColors.mutedForeground,
                               ),
                             ),
@@ -200,301 +215,363 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Author Header
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundImage: NetworkImage(item.authorAvatar),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetailScreen(post: item),
                     ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Author Header (Matching prototype: avatar 32x32, subtitle timeAgo · category, trailing more_horizontal, no separate badge pill)
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
                         children: [
-                          Text(
-                            item.authorName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                          CircleAvatar(
+                            radius: 16,
+                            backgroundImage: NetworkImage(item.authorAvatar),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                    Text(
+                                      item.authorName,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: AppTypography.s12,
+                                        color: AppColors.foreground,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${item.timeAgo} · ${item.category}',
+                                      style: TextStyle(
+                                        fontSize: AppTypography.s9,
+                                        color: AppColors.mutedForeground,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(
+                                LucideIcons.moreHorizontal,
+                                size: 16,
+                                color: AppColors.mutedForeground,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Post Text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 2,
+                          ),
+                          child: Text(
+                            item.content,
+                            style: TextStyle(
+                              fontSize: AppTypography.s14,
+                              height: 1.45,
                               color: AppColors.foreground,
                             ),
                           ),
-                          Text(
-                            '${item.timeAgo} · Tiến Thắng',
-                            style: const TextStyle(
-                              fontSize: 12,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Post Image / Video
+                  if (item.imageUrls.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: GestureDetector(
+                        onTap: () {
+                          final isVideo = item.id == '3';
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MediaViewerScreen(
+                                src: item.imageUrls.first,
+                                type: isVideo ? 'video' : 'image',
+                                duration: isVideo ? '0:42' : null,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                item.imageUrls.first,
+                                height: 190,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                color: item.id == '3' ? Colors.black.withValues(alpha: 0.15) : null,
+                                colorBlendMode: item.id == '3' ? BlendMode.darken : null,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  height: 150,
+                                  color: AppColors.muted,
+                                  child: const Center(
+                                    child: Icon(
+                                      LucideIcons.image,
+                                      color: AppColors.mutedForeground,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            if (item.id == '3') ...[
+                              Container(
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  shape: BoxShape.circle,
+                                  boxShadow: AppColors.softShadow,
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    LucideIcons.play,
+                                    size: 20,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 6,
+                                right: 6,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.7),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    '0:42',
+                                    style: TextStyle(
+                                      fontSize: AppTypography.s9,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+
+                  // Reaction Summary Row (Matching Prototype exactly)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () => _showReactionsBottomSheet(context),
+                          behavior: HitTestBehavior.opaque,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 44,
+                                height: 20,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: 0,
+                                      child: _buildReactionBadge(
+                                        LucideIcons.heart,
+                                        AppColors.primary,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 12,
+                                      child: _buildReactionBadge(
+                                        LucideIcons.thumbsUp,
+                                        const Color(0xFF1877F2),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 24,
+                                      child: _buildReactionBadge(
+                                        LucideIcons.laugh,
+                                        AppColors.gold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$_likesCount',
+                                style: TextStyle(
+                                  fontSize: AppTypography.s12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.foreground,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => _showCommentsBottomSheet(context),
+                          child: Text(
+                            '${item.commentsCount} bình luận · 12 chia sẻ',
+                            style: TextStyle(
+                              fontSize: AppTypography.s12,
                               color: AppColors.mutedForeground,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        item.category,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Post Text
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 2,
-                ),
-                child: Text(
-                  item.content,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    height: 1.45,
-                    color: AppColors.foreground,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-
-              // Post Image
-              if (item.imageUrls.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      item.imageUrls.first,
-                      height: 190,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 150,
-                        color: AppColors.muted,
-                        child: const Center(
-                          child: Icon(
-                            LucideIcons.image,
-                            color: AppColors.mutedForeground,
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
-                ),
 
-              // Reaction Summary Row (Matching Prototype exactly)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _showReactionsBottomSheet(context),
-                      behavior: HitTestBehavior.opaque,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 44,
-                            height: 20,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  child: _buildReactionBadge(
-                                    LucideIcons.heart,
-                                    AppColors.primary,
+                  Divider(
+                    height: 1,
+                    thickness: 0.5,
+                    color: AppColors.border.withValues(alpha: 0.4),
+                    indent: 12,
+                    endIndent: 12,
+                  ),
+
+                  // Post Action Buttons (Thả tim / Reaction, Bình luận, Chia sẻ)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    child: Row(
+                      children: [
+                        // Reaction / Like Button with Long-press & Tap Handler
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              if (_selectedReactionEmoji != null) {
+                                _onSelectReaction(
+                                  '❤️',
+                                  'Thả tim',
+                                  AppColors.mutedForeground,
+                                  LucideIcons.heart,
+                                );
+                              } else {
+                                _onSelectReaction(
+                                  '❤️',
+                                  'Yêu thích',
+                                  AppColors.primary,
+                                  LucideIcons.heart,
+                                );
+                              }
+                            },
+                            onLongPress: () {
+                              setState(() {
+                                _showReactionPicker = !_showReactionPicker;
+                              });
+                            },
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (_selectedReactionEmoji != null)
+                                    Text(
+                                      _selectedReactionEmoji!,
+                                      style: TextStyle(fontSize: AppTypography.s16),
+                                    )
+                                  else
+                                    Icon(
+                                      _selectedReactionIcon,
+                                      size: 16,
+                                      color: _selectedReactionColor,
+                                    ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    _selectedReactionLabel,
+                                    style: TextStyle(
+                                      fontSize: AppTypography.s12,
+                                      fontWeight: FontWeight.w600,
+                                      color: _selectedReactionColor,
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                  left: 12,
-                                  child: _buildReactionBadge(
-                                    LucideIcons.thumbsUp,
-                                    const Color(0xFF1877F2),
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 24,
-                                  child: _buildReactionBadge(
-                                    LucideIcons.laugh,
-                                    AppColors.gold,
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$_likesCount',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.foreground,
+                        ),
+
+                        // Comment Button
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => _showCommentsBottomSheet(context),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    LucideIcons.messageCircle,
+                                    size: 16,
+                                    color: AppColors.mutedForeground,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Bình luận',
+                                    style: TextStyle(
+                                      fontSize: AppTypography.s12,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.mutedForeground,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => _showCommentsBottomSheet(context),
-                      child: Text(
-                        '${item.commentsCount} bình luận · 12 chia sẻ',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.mutedForeground,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
-              const Divider(
-                height: 1,
-                thickness: 0.5,
-                indent: 12,
-                endIndent: 12,
-              ),
-
-              // Post Action Buttons (Thả tim / Reaction, Bình luận, Chia sẻ)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                child: Row(
-                  children: [
-                    // Reaction / Like Button with Long-press & Tap Handler
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          if (_selectedReactionEmoji != null) {
-                            _onSelectReaction(
-                              '❤️',
-                              'Thả tim',
-                              AppColors.mutedForeground,
-                              LucideIcons.heart,
-                            );
-                          } else {
-                            _onSelectReaction(
-                              '❤️',
-                              'Yêu thích',
-                              AppColors.primary,
-                              LucideIcons.heart,
-                            );
-                          }
-                        },
-                        onLongPress: () {
-                          setState(() {
-                            _showReactionPicker = !_showReactionPicker;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (_selectedReactionEmoji != null)
-                                Text(
-                                  _selectedReactionEmoji!,
-                                  style: const TextStyle(fontSize: 16),
-                                )
-                              else
-                                Icon(
-                                  _selectedReactionIcon,
-                                  size: 16,
-                                  color: _selectedReactionColor,
-                                ),
-                              const SizedBox(width: 6),
-                              Text(
-                                _selectedReactionLabel,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: _selectedReactionColor,
-                                ),
+                        // Share Button
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    LucideIcons.share2,
+                                    size: 16,
+                                    color: AppColors.mutedForeground,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    'Chia sẻ',
+                                    style: TextStyle(
+                                      fontSize: AppTypography.s12,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.mutedForeground,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-
-                    // Comment Button
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _showCommentsBottomSheet(context),
-                        borderRadius: BorderRadius.circular(8),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                LucideIcons.messageCircle,
-                                size: 16,
-                                color: AppColors.mutedForeground,
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Bình luận',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.mutedForeground,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Share Button
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(8),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                LucideIcons.share2,
-                                size: 16,
-                                color: AppColors.mutedForeground,
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Chia sẻ',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.mutedForeground,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
 
           // Facebook-style Animated Reaction Selector Bar
           if (_showReactionPicker)
@@ -520,41 +597,77 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildReactionPickerOption(
-                      '👍',
-                      'Thích',
-                      const Color(0xFF1877F2),
-                      LucideIcons.thumbsUp,
+                    _ReactionPickerItem(
+                      emoji: '👍',
+                      label: 'Thích',
+                      color: const Color(0xFF1877F2),
+                      icon: LucideIcons.thumbsUp,
+                      onTap: () => _onSelectReaction(
+                        '👍',
+                        'Thích',
+                        const Color(0xFF1877F2),
+                        LucideIcons.thumbsUp,
+                      ),
                     ),
-                    _buildReactionPickerOption(
-                      '❤️',
-                      'Yêu thích',
-                      AppColors.primary,
-                      LucideIcons.heart,
+                    _ReactionPickerItem(
+                      emoji: '❤️',
+                      label: 'Yêu thích',
+                      color: AppColors.primary,
+                      icon: LucideIcons.heart,
+                      onTap: () => _onSelectReaction(
+                        '❤️',
+                        'Yêu thích',
+                        AppColors.primary,
+                        LucideIcons.heart,
+                      ),
                     ),
-                    _buildReactionPickerOption(
-                      '😆',
-                      'Haha',
-                      AppColors.gold,
-                      LucideIcons.laugh,
+                    _ReactionPickerItem(
+                      emoji: '😆',
+                      label: 'Haha',
+                      color: AppColors.gold,
+                      icon: LucideIcons.laugh,
+                      onTap: () => _onSelectReaction(
+                        '😆',
+                        'Haha',
+                        AppColors.gold,
+                        LucideIcons.laugh,
+                      ),
                     ),
-                    _buildReactionPickerOption(
-                      '😮',
-                      'Bất ngờ',
-                      Colors.purple,
-                      LucideIcons.partyPopper,
+                    _ReactionPickerItem(
+                      emoji: '😮',
+                      label: 'Bất ngờ',
+                      color: Colors.purple,
+                      icon: LucideIcons.partyPopper,
+                      onTap: () => _onSelectReaction(
+                        '😮',
+                        'Bất ngờ',
+                        Colors.purple,
+                        LucideIcons.partyPopper,
+                      ),
                     ),
-                    _buildReactionPickerOption(
-                      '😢',
-                      'Buồn',
-                      Colors.blueGrey,
-                      LucideIcons.frown,
+                    _ReactionPickerItem(
+                      emoji: '😢',
+                      label: 'Buồn',
+                      color: Colors.blueGrey,
+                      icon: LucideIcons.frown,
+                      onTap: () => _onSelectReaction(
+                        '😢',
+                        'Buồn',
+                        Colors.blueGrey,
+                        LucideIcons.frown,
+                      ),
                     ),
-                    _buildReactionPickerOption(
-                      '😡',
-                      'Phẫn nộ',
-                      Colors.redAccent,
-                      LucideIcons.angry,
+                    _ReactionPickerItem(
+                      emoji: '😡',
+                      label: 'Phẫn nộ',
+                      color: Colors.redAccent,
+                      icon: LucideIcons.angry,
+                      onTap: () => _onSelectReaction(
+                        '😡',
+                        'Phẫn nộ',
+                        Colors.redAccent,
+                        LucideIcons.angry,
+                      ),
                     ),
                   ],
                 ),
@@ -575,27 +688,55 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
         border: Border.all(color: Colors.white, width: 1.5),
       ),
       child: Center(
-        child: Icon(icon, size: 10, color: Colors.white),
+        child: Icon(
+          _getFilledIcon(icon),
+          size: 9,
+          color: Colors.white,
+        ),
       ),
     );
   }
+} // Closes _PostCardWidgetState
 
-  Widget _buildReactionPickerOption(
-    String emoji,
-    String label,
-    Color color,
-    IconData icon,
-  ) {
+class _ReactionPickerItem extends StatefulWidget {
+  const _ReactionPickerItem({
+    required this.emoji,
+    required this.label,
+    required this.color,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String emoji;
+  final String label;
+  final Color color;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  State<_ReactionPickerItem> createState() => _ReactionPickerItemState();
+}
+
+class _ReactionPickerItemState extends State<_ReactionPickerItem> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _onSelectReaction(emoji, label, color, icon),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        child: AnimatedScale(
-          scale: 1.1,
-          duration: const Duration(milliseconds: 150),
-          child: Text(
-            emoji,
-            style: const TextStyle(fontSize: 24),
+      onTap: widget.onTap,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: AnimatedScale(
+            scale: _isHovered ? 1.35 : 1.0,
+            duration: const Duration(milliseconds: 120),
+            curve: Curves.easeOutBack,
+            child: Text(
+              widget.emoji,
+              style: TextStyle(fontSize: AppTypography.s24),
+            ),
           ),
         ),
       ),
@@ -673,8 +814,8 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
           // Sheet Header matching Prototype
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppColors.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
             ),
             child: Row(
               children: [
@@ -699,18 +840,18 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Bình luận',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: AppTypography.s15,
                           fontWeight: FontWeight.bold,
                           color: AppColors.foreground,
                         ),
                       ),
                       Text(
                         '${_comments.length} bình luận · cho phép đính kèm ảnh',
-                        style: const TextStyle(
-                          fontSize: 11,
+                        style: TextStyle(
+                          fontSize: AppTypography.s11,
                           color: AppColors.mutedForeground,
                         ),
                       ),
@@ -738,8 +879,8 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                         backgroundColor: AppColors.primary,
                         child: Text(
                           c['avatar']!,
-                          style: const TextStyle(
-                            fontSize: 12,
+                          style: TextStyle(
+                            fontSize: AppTypography.s12,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -768,8 +909,8 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                                 children: [
                                   Text(
                                     c['name']!,
-                                    style: const TextStyle(
-                                      fontSize: 12,
+                                    style: TextStyle(
+                                      fontSize: AppTypography.s12,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.foreground,
                                     ),
@@ -777,8 +918,8 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                                   const SizedBox(height: 2),
                                   Text(
                                     c['text']!,
-                                    style: const TextStyle(
-                                      fontSize: 13,
+                                    style: TextStyle(
+                                      fontSize: AppTypography.s13,
                                       height: 1.4,
                                       color: AppColors.foreground,
                                     ),
@@ -791,25 +932,25 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                               children: [
                                 Text(
                                   c['time']!,
-                                  style: const TextStyle(
-                                    fontSize: 11,
+                                  style: TextStyle(
+                                    fontSize: AppTypography.s11,
                                     color: AppColors.mutedForeground,
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                const Text(
+                                Text(
                                   'Thích',
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: AppTypography.s11,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.mutedForeground,
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                const Text(
+                                Text(
                                   'Trả lời',
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: AppTypography.s11,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.mutedForeground,
                                   ),
@@ -823,8 +964,8 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                                 const SizedBox(width: 2),
                                 Text(
                                   c['likes']!,
-                                  style: const TextStyle(
-                                    fontSize: 11,
+                                  style: TextStyle(
+                                    fontSize: AppTypography.s11,
                                     color: AppColors.mutedForeground,
                                   ),
                                 ),
@@ -848,19 +989,19 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
               12,
               MediaQuery.of(context).viewInsets.bottom + 16,
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
-              border: Border(top: BorderSide(color: AppColors.border)),
+              border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
             ),
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 16,
                   backgroundColor: AppColors.primary,
                   child: Text(
                     'T',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: AppTypography.s12,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -886,11 +1027,11 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                         Expanded(
                           child: TextField(
                             controller: _commentController,
-                            style: const TextStyle(fontSize: 13),
-                            decoration: const InputDecoration(
+                            style: TextStyle(fontSize: AppTypography.s13),
+                            decoration: InputDecoration(
                               hintText: 'Viết bình luận…',
                               hintStyle: TextStyle(
-                                fontSize: 13,
+                                fontSize: AppTypography.s13,
                                 color: AppColors.mutedForeground,
                               ),
                               border: InputBorder.none,
@@ -948,8 +1089,6 @@ class _NewsHeader extends StatefulWidget {
 }
 
 class _NewsHeaderState extends State<_NewsHeader> {
-  bool _searchOpen = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -966,10 +1105,10 @@ class _NewsHeaderState extends State<_NewsHeader> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Bản tin xã',
                 style: TextStyle(
-                  fontSize: 21,
+                  fontSize: AppTypography.s21,
                   fontWeight: FontWeight.w900,
                   color: AppColors.primary,
                   letterSpacing: -0.5,
@@ -979,20 +1118,30 @@ class _NewsHeaderState extends State<_NewsHeader> {
                 children: [
                   _buildHeaderButton(
                     icon: LucideIcons.search,
-                    isActive: _searchOpen,
-                    onTap: () => setState(() => _searchOpen = !_searchOpen),
+                    onTap: () {
+                      final posts = context.read<NewsViewModel>().items;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NewsSearchScreen(posts: posts),
+                        ),
+                      );
+                    },
                   ),
-                  const SizedBox(width: 8),
-                  _buildHeaderButton(
-                    icon: LucideIcons.plus,
-                    onTap: () {},
-                  ),
+
                   const SizedBox(width: 8),
                   Stack(
                     children: [
                       _buildHeaderButton(
                         icon: LucideIcons.bell,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NewsNotificationsScreen(),
+                            ),
+                          );
+                        },
                       ),
                       Positioned(
                         right: 8,
@@ -1012,56 +1161,6 @@ class _NewsHeaderState extends State<_NewsHeader> {
               ),
             ],
           ),
-          if (_searchOpen) ...[
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.4),
-                ),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    LucideIcons.search,
-                    size: 16,
-                    color: AppColors.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: TextField(
-                      autofocus: true,
-                      style: TextStyle(fontSize: 14),
-                      decoration: InputDecoration(
-                        hintText: 'Tìm bài viết, sự kiện…',
-                        hintStyle: TextStyle(
-                          fontSize: 14,
-                          color: AppColors.mutedForeground,
-                        ),
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => setState(() => _searchOpen = false),
-                    child: const Text(
-                      'Hủy',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.mutedForeground,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ],
       ),
     );
@@ -1099,64 +1198,74 @@ class _ComposerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
-        boxShadow: AppColors.softShadow,
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: const BoxDecoration(
-              gradient: AppColors.gradientAvatar,
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Text(
-                'BN',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const NewsCreatePostScreen(),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+          boxShadow: AppColors.softShadow,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: const BoxDecoration(
+                gradient: AppColors.gradientAvatar,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  'BN',
+                  style: TextStyle(
+                    fontSize: AppTypography.s12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text(
-              'Bạn muốn chia sẻ điều gì với làng?',
-              style: TextStyle(fontSize: 13, color: AppColors.mutedForeground),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Bạn muốn chia sẻ điều gì với làng?',
+                style: TextStyle(fontSize: AppTypography.s13, color: AppColors.mutedForeground),
+              ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Row(
-              children: [
-                Icon(LucideIcons.image, size: 13, color: AppColors.primary),
-                SizedBox(width: 4),
-                Text(
-                  'Ảnh',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.image, size: 13, color: AppColors.primary),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Ảnh',
+                    style: TextStyle(
+                      fontSize: AppTypography.s12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1238,8 +1347,8 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
           // Header Widget (03- cảm xúc Title)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppColors.border)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
             ),
             child: Row(
               children: [
@@ -1264,18 +1373,18 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Cảm xúc',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: AppTypography.s15,
                           fontWeight: FontWeight.bold,
                           color: AppColors.foreground,
                         ),
                       ),
                       Text(
                         '${_sampleLikers.length} người đã bày tỏ cảm xúc',
-                        style: const TextStyle(
-                          fontSize: 11,
+                        style: TextStyle(
+                          fontSize: AppTypography.s11,
                           color: AppColors.mutedForeground,
                         ),
                       ),
@@ -1290,20 +1399,20 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
           Container(
             height: 48,
             padding: const EdgeInsets.symmetric(vertical: 8),
-            decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: AppColors.border, width: 0.5)),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
             ),
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
                 _buildTabButton('all', 'Tất cả ${counts['all']}'),
-                _buildReactionTabButton('❤️', counts['❤️'] ?? 0, AppColors.primary),
-                _buildReactionTabButton('👍', counts['👍'] ?? 0, const Color(0xFF1877F2)),
-                _buildReactionTabButton('😆', counts['😆'] ?? 0, AppColors.gold),
-                _buildReactionTabButton('😮', counts['😮'] ?? 0, Colors.purple),
-                _buildReactionTabButton('😢', counts['😢'] ?? 0, Colors.blueGrey),
-                _buildReactionTabButton('😡', counts['😡'] ?? 0, Colors.redAccent),
+                _buildReactionTabButton('❤️', counts['❤️'] ?? 0, AppColors.primary, LucideIcons.heart),
+                _buildReactionTabButton('👍', counts['👍'] ?? 0, const Color(0xFF1877F2), LucideIcons.thumbsUp),
+                _buildReactionTabButton('😆', counts['😆'] ?? 0, AppColors.gold, LucideIcons.laugh),
+                _buildReactionTabButton('😮', counts['😮'] ?? 0, Colors.purple, LucideIcons.partyPopper),
+                _buildReactionTabButton('😢', counts['😢'] ?? 0, Colors.blueGrey, LucideIcons.frown),
+                _buildReactionTabButton('😡', counts['😡'] ?? 0, Colors.redAccent, LucideIcons.angry),
               ],
             ),
           ),
@@ -1318,8 +1427,8 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                 final isFollowed = _followedUsers.contains(l.name);
                 return Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: AppColors.border, width: 0.5)),
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
                   ),
                   child: Row(
                     children: [
@@ -1332,8 +1441,8 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                             backgroundColor: AppColors.secondary,
                             child: Text(
                               l.avatar,
-                              style: const TextStyle(
-                                fontSize: 12,
+                              style: TextStyle(
+                                fontSize: AppTypography.s12,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.secondaryForeground,
                               ),
@@ -1357,7 +1466,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                               ),
                               child: Text(
                                 l.emoji,
-                                style: const TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: AppTypography.s10),
                               ),
                             ),
                           ),
@@ -1370,8 +1479,8 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                           children: [
                             Text(
                               l.name,
-                              style: const TextStyle(
-                                fontSize: 13,
+                              style: TextStyle(
+                                fontSize: AppTypography.s13,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.foreground,
                               ),
@@ -1379,8 +1488,8 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                             const SizedBox(height: 1),
                             Text(
                               '${l.sub} · ${l.label}',
-                              style: const TextStyle(
-                                fontSize: 11,
+                              style: TextStyle(
+                                fontSize: AppTypography.s11,
                                 color: AppColors.mutedForeground,
                               ),
                             ),
@@ -1411,7 +1520,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                           child: Text(
                             isFollowed ? 'Đang theo dõi' : 'Theo dõi',
                             style: TextStyle(
-                              fontSize: 11,
+                              fontSize: AppTypography.s11,
                               fontWeight: FontWeight.bold,
                               color: isFollowed ? AppColors.mutedForeground : AppColors.primary,
                             ),
@@ -1448,7 +1557,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: AppTypography.s11,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               color: isSelected ? Colors.white : AppColors.foreground,
             ),
@@ -1458,7 +1567,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
     );
   }
 
-  Widget _buildReactionTabButton(String emoji, int count, Color color) {
+  Widget _buildReactionTabButton(String emoji, int count, Color color, IconData icon) {
     final isSelected = _selectedTab == emoji;
     return GestureDetector(
       onTap: () => setState(() => _selectedTab = emoji),
@@ -1477,15 +1586,26 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                emoji,
-                style: const TextStyle(fontSize: 12),
+              Container(
+                width: 14,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Icon(
+                    _getFilledIcon(icon),
+                    size: 8,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 6),
               Text(
                 '$count',
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: AppTypography.s11,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   color: isSelected ? Colors.white : AppColors.foreground,
                 ),

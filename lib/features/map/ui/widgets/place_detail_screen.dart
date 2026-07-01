@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:travel_map/shared/theme/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:travel_map/features/map/domain/models/map_place.dart';
@@ -148,8 +149,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                   opacity: _headerTitleOpacity,
                   child: Text(
                     place.title,
-                    style: const TextStyle(
-                      fontSize: 17,
+                    style: TextStyle(
+                      fontSize: AppTypography.s17,
                       fontWeight: FontWeight.bold,
                       color: AppColors.foreground,
                     ),
@@ -250,8 +251,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                               ),
                               child: Text(
                                 categoryLabel,
-                                style: const TextStyle(
-                                  fontSize: 12,
+                                style: TextStyle(
+                                  fontSize: AppTypography.s12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                   letterSpacing: 0.8,
@@ -261,8 +262,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                             const SizedBox(height: 8),
                             Text(
                               place.title,
-                              style: const TextStyle(
-                                fontSize: 25,
+                              style: TextStyle(
+                                fontSize: AppTypography.s25,
                                 fontWeight: FontWeight.w900,
                                 color: Colors.white,
                                 height: 1.2,
@@ -286,8 +287,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                                 const SizedBox(width: 4),
                                 Text(
                                   '${place.rating} (${place.reviewCount})',
-                                  style: const TextStyle(
-                                    fontSize: 14,
+                                  style: TextStyle(
+                                    fontSize: AppTypography.s14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -301,8 +302,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                                 const SizedBox(width: 4),
                                 Text(
                                   place.address,
-                                  style: const TextStyle(
-                                    fontSize: 14,
+                                  style: TextStyle(
+                                    fontSize: AppTypography.s14,
                                     color: Colors.white70,
                                   ),
                                 ),
@@ -352,10 +353,10 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                       const SizedBox(height: 24),
 
                       // Giới thiệu Section
-                      const Text(
+                      Text(
                         'GIỚI THIỆU',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: AppTypography.s14,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                           color: AppColors.mutedForeground,
@@ -364,8 +365,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                       const SizedBox(height: 8),
                       Text(
                         place.description,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: AppTypography.s16,
                           height: 1.6,
                           color: AppColors.foreground,
                         ),
@@ -373,10 +374,10 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                       const SizedBox(height: 24),
 
                       // Bộ sưu tập ảnh & Video Section
-                      const Text(
+                      Text(
                         'BỘ SƯU TẬP ẢNH & VIDEO',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: AppTypography.s14,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
                           color: AppColors.mutedForeground,
@@ -499,10 +500,10 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                         size: 18,
                         color: AppColors.foreground,
                       ),
-                      label: const Text(
+                      label: Text(
                         'Chỉ đường',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: AppTypography.s15,
                           fontWeight: FontWeight.bold,
                           color: AppColors.foreground,
                         ),
@@ -526,10 +527,10 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                         size: 18,
                         color: Colors.white,
                       ),
-                      label: const Text(
+                      label: Text(
                         'Tham quan ảo',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: AppTypography.s15,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -570,8 +571,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
           const SizedBox(height: 6),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 11,
+            style: TextStyle(
+              fontSize: AppTypography.s11,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
               color: AppColors.mutedForeground,
@@ -580,8 +581,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
           const SizedBox(height: 2),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 15,
+            style: TextStyle(
+              fontSize: AppTypography.s15,
               fontWeight: FontWeight.bold,
               color: AppColors.foreground,
             ),

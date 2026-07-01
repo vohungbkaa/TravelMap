@@ -26,6 +26,8 @@ class ShopServerRepositoryImpl implements ShopServerRepository {
           imageUrl:
               'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=500',
           category: 'Hoa quả tươi',
+          description:
+              'Nhãn lồng cổ Tiến Thắng quả to, cùi dày, hạt nhỏ, vị ngọt đậm đà và có hương thơm đặc trưng. Được thu hoạch chín cây hoàn toàn tự nhiên từ các vườn nhãn cổ thụ hàng trăm năm tuổi của xã.',
         ),
         ShopProduct(
           id: 'p2',
@@ -36,6 +38,8 @@ class ShopServerRepositoryImpl implements ShopServerRepository {
           imageUrl:
               'https://images.unsplash.com/photo-1587049352847-4a222e784d38?w=500',
           category: 'Đặc sản chế biến',
+          description:
+              'Mật ong hoa nhãn nguyên chất 100%, thu hoạch chính vụ hoa nhãn Tiến Thắng. Mật ong có màu vàng óng, vị ngọt thanh, đặc sánh và giàu dinh dưỡng, không pha lẫn bất kỳ tạp chất nào.',
         ),
         ShopProduct(
           id: 'p3',
@@ -46,6 +50,8 @@ class ShopServerRepositoryImpl implements ShopServerRepository {
           imageUrl:
               'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500',
           category: 'Nông sản thô',
+          description:
+              'Gạo nếp thơm hương thắng hạt tròn, trắng đều, dẻo nhiều và thơm ngào ngạt khi đồ xôi. Sản phẩm được canh tác hữu cơ trên cánh đồng mẫu lớn Tiến Thắng đạt tiêu chuẩn OCOP chất lượng cao.',
         ),
         ShopProduct(
           id: 'p4',
@@ -56,6 +62,8 @@ class ShopServerRepositoryImpl implements ShopServerRepository {
           imageUrl:
               'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500',
           category: 'Đặc sản chế biến',
+          description:
+              'Trà Đinh hảo hạng thu hái từ những búp trà non nhất vào sáng sớm. Cánh trà nhỏ mảnh như chiếc đinh, sắc nước xanh vàng óng, vị chát dịu hậu ngọt sâu tinh tế đặc trưng của vùng trà Tiến Thắng.',
         ),
       ];
 
