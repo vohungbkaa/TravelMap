@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -263,8 +264,16 @@ class _MapContentViewState extends State<_MapContentView> {
         FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            initialCenter: const LatLng(21.0285, 105.8542),
-            initialZoom: 14,
+            initialCenter: const LatLng(21.195, 105.6775),
+            initialZoom: 13.5,
+            minZoom: 12,
+            maxZoom: 18,
+            cameraConstraint: CameraConstraint.contain(
+              bounds: LatLngBounds(
+                const LatLng(21.145, 105.61),
+                const LatLng(21.245, 105.745),
+              ),
+            ),
             onTap: (tapPosition, point) {
               if (_isDistanceMenuOpen) {
                 setState(() => _isDistanceMenuOpen = false);
@@ -405,39 +414,74 @@ class _MapContentViewState extends State<_MapContentView> {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // Category Filter Chips (Main underlying layer)
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
                         _buildFilterChip(
                           'Tất cả loại',
-                          LucideIcons.mapPin,
+                          Icon(
+                            LucideIcons.mapPin,
+                            size: 13,
+                            color: viewModel.selectedCategory == 'all'
+                                ? Colors.white
+                                : AppColors.primary,
+                          ),
                           AppColors.primary,
                           viewModel.selectedCategory == 'all',
                           () => viewModel.setCategory('all'),
                         ),
-                        _buildFilterChip(
-                          'Di tích',
-                          LucideIcons.landmark,
-                          AppColors.primary,
-                          viewModel.selectedCategory == 'ditich',
-                          () => viewModel.setCategory('ditich'),
-                        ),
-                        _buildFilterChip(
-                          'Du lịch',
-                          LucideIcons.treePine,
-                          AppColors.accent,
-                          viewModel.selectedCategory == 'dulich',
-                          () => viewModel.setCategory('dulich'),
-                        ),
-                        _buildFilterChip(
-                          'Đặc sản',
-                          LucideIcons.wheat,
-                          AppColors.gold,
-                          viewModel.selectedCategory == 'dacsan',
-                          () => viewModel.setCategory('dacsan'),
-                        ),
+                        ...viewModel.categoriesList.map((category) {
+                          final isSelected =
+                              viewModel.selectedCategory == category.name;
+                          final color = _parseColor(category.markerColor);
+                          
+                          Widget avatar;
+                          if (category.iconUrl != null && category.iconUrl!.isNotEmpty) {
+                            if (category.iconUrl!.contains('.svg')) {
+                              avatar = SvgPicture.network(
+                                category.iconUrl!,
+                                width: 14,
+                                height: 14,
+                                colorFilter: ColorFilter.mode(
+                                  isSelected ? Colors.white : color,
+                                  BlendMode.srcIn,
+                                ),
+                                placeholderBuilder: (context) => Icon(
+                                  LucideIcons.mapPin,
+                                  size: 13,
+                                  color: isSelected ? Colors.white : color,
+                                ),
+                              );
+                            } else {
+                              avatar = Image.network(
+                                category.iconUrl!,
+                                width: 14,
+                                height: 14,
+                                color: isSelected ? Colors.white : color,
+                                errorBuilder: (context, error, stackTrace) => Icon(
+                                  LucideIcons.mapPin,
+                                  size: 13,
+                                  color: isSelected ? Colors.white : color,
+                                ),
+                              );
+                            }
+                          } else {
+                            avatar = Icon(
+                              LucideIcons.mapPin,
+                              size: 13,
+                              color: isSelected ? Colors.white : color,
+                            );
+                          }
+
+                          return _buildFilterChip(
+                            category.name,
+                            avatar,
+                            color,
+                            isSelected,
+                            () => viewModel.setCategory(category.name),
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -667,7 +711,7 @@ class _MapContentViewState extends State<_MapContentView> {
 
   Widget _buildFilterChip(
     String label,
-    IconData icon,
+    Widget avatar,
     Color color,
     bool isSelected,
     VoidCallback onTap,
@@ -676,11 +720,7 @@ class _MapContentViewState extends State<_MapContentView> {
       margin: const EdgeInsets.only(right: 6),
       child: FilterChip(
         showCheckmark: false,
-        avatar: Icon(
-          icon,
-          size: 13,
-          color: isSelected ? Colors.white : color,
-        ),
+        avatar: avatar,
         label: Text(label),
         labelStyle: TextStyle(
           fontSize: 12,
@@ -697,6 +737,15 @@ class _MapContentViewState extends State<_MapContentView> {
         onSelected: (_) => onTap(),
       ),
     );
+  }
+
+  Color _parseColor(String? hexString) {
+    if (hexString == null || hexString.isEmpty) return AppColors.primary;
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    final intColor = int.tryParse(buffer.toString(), radix: 16);
+    return intColor != null ? Color(intColor) : AppColors.primary;
   }
 
   Widget _buildMarkerWidget(MapPlace place, bool isSelected) {
@@ -783,20 +832,36 @@ class _MapContentViewState extends State<_MapContentView> {
     double borderWidth,
   ) {
     final iconUrl = place.markerIconUrl;
-    if (_isUploadedMarkerImage(iconUrl)) {
-      final imageSize = markerSize - (borderWidth * 2) - 2;
-      return Center(
-        child: ClipOval(
-          child: Image.network(
-            iconUrl!,
-            width: imageSize,
-            height: imageSize,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) =>
-                _buildFallbackMarkerIcon(place, markerColor),
+    
+    if (iconUrl != null && iconUrl.isNotEmpty) {
+      if (iconUrl.toLowerCase().contains('.svg') || iconUrl.contains('api.iconify.design')) {
+        return Center(
+          child: SvgPicture.network(
+            iconUrl,
+            width: 20,
+            height: 20,
+            colorFilter: const ColorFilter.mode(
+              Colors.white,
+              BlendMode.srcIn,
+            ),
+            placeholderBuilder: (context) => _buildFallbackMarkerIcon(place, markerColor),
           ),
-        ),
-      );
+        );
+      } else if (_isUploadedMarkerImage(iconUrl)) {
+        final imageSize = markerSize - (borderWidth * 2) - 2;
+        return Center(
+          child: ClipOval(
+            child: Image.network(
+              iconUrl,
+              width: imageSize,
+              height: imageSize,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildFallbackMarkerIcon(place, markerColor),
+            ),
+          ),
+        );
+      }
     }
 
     return _buildFallbackMarkerIcon(place, markerColor);

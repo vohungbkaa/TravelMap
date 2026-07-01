@@ -37,7 +37,7 @@ class MapPlace {
 
   final String id;
   final String title;
-  final String category; // 'ditich' | 'dulich' | 'dacsan'
+  final String category;
   final String address;
   final String distance;
   final double distanceKm;

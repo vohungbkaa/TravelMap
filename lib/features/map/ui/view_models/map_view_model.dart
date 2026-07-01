@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:travel_map/features/map/domain/interactors/map_interactor.dart';
+import 'package:travel_map/features/map/domain/models/map_category.dart';
 import 'package:travel_map/features/map/domain/models/map_place.dart';
 import 'package:travel_map/shared/base/viewmodels/base_api_view_model.dart';
 import 'package:travel_map/shared/result.dart';
@@ -89,8 +90,16 @@ class MapViewModel extends BaseApiViewModel<List<MapPlace>, void>
     notifyListeners();
   }
 
+  List<MapCategory> _categories = [];
+  List<MapCategory> get categoriesList => _categories;
+
   @override
   Future<Result<List<MapPlace>>> getData(void param) async {
+    final categoriesResult = await _mapInteractor.getCategories();
+    if (categoriesResult is Ok<List<MapCategory>>) {
+      _categories = categoriesResult.value;
+      notifyListeners();
+    }
     return _mapInteractor.getPlaces();
   }
 }

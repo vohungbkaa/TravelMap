@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 import 'package:travel_map/features/map/data/repositories/map_repository.dart';
+import 'package:travel_map/features/map/domain/models/map_category.dart';
 import 'package:travel_map/features/map/domain/models/map_place.dart';
 import 'package:travel_map/shared/result.dart';
 
@@ -59,6 +60,38 @@ class MapServerRepositoryImpl implements MapServerRepository {
       _log.warning('Failed to load map places', error, stackTrace);
       return Error(error, stackTrace);
     }
+  }
+
+  @override
+  Future<Result<List<MapCategory>>> getCategories() async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/place-categories',
+      );
+      final payload = response.data?['data'];
+      final rows = payload is List ? payload : const <dynamic>[];
+      final categories = rows
+          .whereType<Map<String, dynamic>>()
+          .map(_mapCategory)
+          .toList(growable: false);
+
+      return Ok(categories);
+    } on Object catch (error, stackTrace) {
+      _log.warning('Failed to load map categories', error, stackTrace);
+      return Error(error, stackTrace);
+    }
+  }
+
+  MapCategory _mapCategory(Map<String, dynamic> json) {
+    return MapCategory(
+      id: _asString(json['id']) ?? '',
+      name: _asString(json['name']) ?? 'Chưa phân loại',
+      code: _asString(json['code']),
+      description: _asString(json['description']),
+      icon: _asString(json['icon']),
+      iconUrl: _resolveMediaUrl(_asString(json['iconUrl'])),
+      markerColor: _asString(json['markerColor']),
+    );
   }
 
   MapPlace _mapPlace(Map<String, dynamic> json) {

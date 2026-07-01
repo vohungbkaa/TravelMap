@@ -1,5 +1,6 @@
 import 'package:travel_map/features/map/data/repositories/map_repository.dart';
 import 'package:travel_map/features/map/domain/interactors/map_interactor.dart';
+import 'package:travel_map/features/map/domain/models/map_category.dart';
 import 'package:travel_map/features/map/domain/models/map_place.dart';
 import 'package:travel_map/shared/result.dart';
 
@@ -11,5 +12,10 @@ class MapInteractorImpl implements MapInteractor {
   @override
   Future<Result<List<MapPlace>>> getPlaces() {
     return _serverRepository.getPlaces();
+  }
+
+  @override
+  Future<Result<List<MapCategory>>> getCategories() {
+    return _serverRepository.getCategories();
   }
 }

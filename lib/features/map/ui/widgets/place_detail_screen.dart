@@ -104,8 +104,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final place = widget.place;
-    final categoryColor = _getCategoryColor(place.category);
-    final categoryLabel = _getCategoryLabel(place.category);
+    final categoryColor = _parseColor(place.markerColor);
+    final categoryLabel = place.category.toUpperCase();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -593,30 +593,13 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
     );
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case 'ditich':
-        return AppColors.primary;
-      case 'dulich':
-        return AppColors.accent;
-      case 'dacsan':
-        return AppColors.gold;
-      default:
-        return AppColors.primary;
-    }
-  }
-
-  String _getCategoryLabel(String category) {
-    switch (category) {
-      case 'ditich':
-        return 'DI TÍCH';
-      case 'dulich':
-        return 'DU LỊCH';
-      case 'dacsan':
-        return 'ĐẶC SẢN';
-      default:
-        return 'ĐỊA ĐIỂM';
-    }
+  Color _parseColor(String? hexString) {
+    if (hexString == null || hexString.isEmpty) return AppColors.primary;
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    final intColor = int.tryParse(buffer.toString(), radix: 16);
+    return intColor != null ? Color(intColor) : AppColors.primary;
   }
 }
 
