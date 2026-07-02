@@ -84,9 +84,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.card,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.card,
         elevation: 0,
         scrolledUnderElevation: 0,
         leadingWidth: 52,
@@ -668,7 +668,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               MediaQuery.of(context).padding.bottom + 8,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.card,
               border: Border(
                 top: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5),
               ),

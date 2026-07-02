@@ -109,7 +109,7 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
     final categoryLabel = _getCategoryLabel(place.category);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.card,
       body: Stack(
         children: [
           CustomScrollView(
@@ -118,8 +118,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
               SliverAppBar(
                 pinned: true,
                 expandedHeight: 300,
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
+                backgroundColor: AppColors.card,
+                surfaceTintColor: AppColors.card,
                 centerTitle: false,
                 leadingWidth: 52,
                 titleSpacing: 16,
@@ -474,14 +474,8 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(20, 14, 20, 28),
               decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 10,
-                    offset: const Offset(0, -4),
-                  ),
-                ],
+                color: AppColors.card,
+                border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.6), width: 0.5)),
               ),
               child: Row(
                 children: [
@@ -490,9 +484,7 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
                         side: const BorderSide(color: AppColors.border),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shape: const StadiumBorder(),
                       ),
                       onPressed: () {},
                       icon: const Icon(
@@ -516,23 +508,20 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
                         backgroundColor: AppColors.primary,
+                        foregroundColor: AppColors.primaryForeground,
                         elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shape: const StadiumBorder(),
                       ),
                       onPressed: () {},
                       icon: const Icon(
                         LucideIcons.sparkles,
-                        size: 18,
-                        color: Colors.white,
+                        size: 20,
                       ),
                       label: Text(
                         'Tham quan ảo',
                         style: TextStyle(
                           fontSize: AppTypography.s15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -554,16 +543,9 @@ class _PlaceDetailScreenState extends State<PlaceDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
       ),
       child: Column(
         children: [

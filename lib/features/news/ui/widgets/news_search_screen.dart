@@ -111,7 +111,7 @@ class _NewsSearchScreenState extends State<NewsSearchScreen> {
     final results = _searchResults;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.card,
       body: SafeArea(
         child: Column(
           children: [
@@ -428,7 +428,7 @@ class _NewsSearchScreenState extends State<NewsSearchScreen> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: AppColors.border.withValues(alpha: 0.5),
@@ -578,7 +578,7 @@ class _CommentsSheetHelperState extends State<_CommentsSheetHelper> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -647,14 +647,14 @@ class _CommentsSheetHelperState extends State<_CommentsSheetHelper> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 16,
+                        radius: 20,
                         backgroundColor: AppColors.primary,
                         child: Text(
                           c['avatar']!,
                           style: TextStyle(
                             fontSize: AppTypography.s12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppColors.card,
                           ),
                         ),
                       ),
@@ -750,20 +750,20 @@ class _CommentsSheetHelperState extends State<_CommentsSheetHelper> {
               MediaQuery.of(context).viewInsets.bottom + 16,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.card,
               border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
             ),
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 16,
+                  radius: 20,
                   backgroundColor: AppColors.primary,
                   child: Text(
                     'T',
                     style: TextStyle(
                       fontSize: AppTypography.s12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.primaryForeground,
                     ),
                   ),
                 ),

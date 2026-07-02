@@ -116,6 +116,7 @@ class _MapContentViewState extends State<_MapContentView> {
     unawaited(
       showModalBottomSheet<void>(
         context: context,
+        backgroundColor: AppColors.card,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -317,9 +318,9 @@ class _MapContentViewState extends State<_MapContentView> {
                 height: 48,
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.card,
                   borderRadius: BorderRadius.circular(24),
-                  boxShadow: AppColors.softShadow,
+                  border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
                 ),
                 child: Row(
                   children: [
@@ -451,15 +452,9 @@ class _MapContentViewState extends State<_MapContentView> {
                       child: Container(
                         width: 175,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.card,
                           borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.18),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
+                          border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -490,7 +485,7 @@ class _MapContentViewState extends State<_MapContentView> {
               // Map Style Switcher Button
               FloatingActionButton.small(
                 heroTag: 'map_style_btn',
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.card,
                 elevation: 3,
                 onPressed: _showMapStyleBottomSheet,
                 child: const Icon(
@@ -503,7 +498,7 @@ class _MapContentViewState extends State<_MapContentView> {
               // Re-center Location Button
               FloatingActionButton.small(
                 heroTag: 'recenter_btn',
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.card,
                 elevation: 3,
                 onPressed: () {
                   viewModel.selectPlace(null);
@@ -530,9 +525,9 @@ class _MapContentViewState extends State<_MapContentView> {
                 ? Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.card,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: AppColors.softShadow,
+                      border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
                     ),
                     child: Center(
                       child: Text(
@@ -563,24 +558,14 @@ class _MapContentViewState extends State<_MapContentView> {
                           margin: const EdgeInsets.only(right: 10),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.card,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: isSelected
                                   ? AppColors.primary
-                                  : Colors.transparent,
-                              width: isSelected ? 2 : 0,
+                                  : AppColors.border.withValues(alpha: 0.6),
+                              width: isSelected ? 2 : 1,
                             ),
-                            boxShadow: isSelected
-                                ? [
-                                    BoxShadow(
-                                      color: AppColors.primary
-                                          .withValues(alpha: 0.25),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ]
-                                : AppColors.softShadow,
                           ),
                           child: Row(
                             children: [
@@ -679,17 +664,17 @@ class _MapContentViewState extends State<_MapContentView> {
         avatar: Icon(
           icon,
           size: 13,
-          color: isSelected ? Colors.white : color,
+          color: isSelected ? AppColors.primaryForeground : color,
         ),
         label: Text(label),
         labelStyle: TextStyle(
           fontSize: AppTypography.s12,
           fontWeight: FontWeight.w600,
-          color: isSelected ? Colors.white : AppColors.foreground,
+          color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
         ),
         selected: isSelected,
         selectedColor: color,
-        backgroundColor: Colors.white.withValues(alpha: 0.95),
+        backgroundColor: AppColors.card.withValues(alpha: 0.95),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -747,15 +732,9 @@ class _MapContentViewState extends State<_MapContentView> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.card,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.25),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,

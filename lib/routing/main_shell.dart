@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:travel_map/shared/theme/app_colors.dart';
+import 'package:travel_map/shared/theme/app_typography.dart';
 
 class MainShell extends StatelessWidget {
   const MainShell({
@@ -72,15 +73,15 @@ class MainShell extends StatelessWidget {
             ),
             child: Icon(
               icon,
-              size: 18,
-              color: isActive ? Colors.white : AppColors.mutedForeground,
+              size: 20,
+              color: isActive ? AppColors.primaryForeground : AppColors.mutedForeground,
             ),
           ),
           const SizedBox(height: 3),
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: AppTypography.s10,
               fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
               color: isActive ? AppColors.primary : AppColors.mutedForeground,
             ),

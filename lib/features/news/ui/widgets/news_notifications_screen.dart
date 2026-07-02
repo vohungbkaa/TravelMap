@@ -202,7 +202,7 @@ class _NewsNotificationsScreenState extends State<NewsNotificationsScreen> {
         : _notifications.where((n) => n.unread).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.card,
       body: SafeArea(
         child: Column(
           children: [
@@ -210,7 +210,7 @@ class _NewsNotificationsScreenState extends State<NewsNotificationsScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.card,
                 border: Border(
                   bottom: BorderSide(
                     color: AppColors.border.withValues(alpha: 0.4),
@@ -410,7 +410,7 @@ class _NewsNotificationsScreenState extends State<NewsNotificationsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected ? AppColors.primary : AppColors.card,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? Colors.transparent : AppColors.border.withValues(alpha: 0.6),
@@ -422,7 +422,7 @@ class _NewsNotificationsScreenState extends State<NewsNotificationsScreen> {
           style: TextStyle(
             fontSize: AppTypography.s10,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.foreground,
+            color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
           ),
         ),
       ),

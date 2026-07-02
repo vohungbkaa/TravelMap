@@ -17,7 +17,7 @@ import 'package:travel_map/shared/theme/app_colors.dart';
 IconData _getFilledIcon(IconData outlineIcon) {
   if (outlineIcon == LucideIcons.heart) return Icons.favorite;
   if (outlineIcon == LucideIcons.thumbsUp) return Icons.thumb_up;
-  if (outlineIcon == LucideIcons.laugh) return Icons.sentiment_very_satisfied;
+  if (outlineIcon == LucideIcons.laugh) return Icons.emoji_emotions;
   if (outlineIcon == LucideIcons.partyPopper) return Icons.celebration;
   if (outlineIcon == LucideIcons.frown) return Icons.sentiment_dissatisfied;
   if (outlineIcon == LucideIcons.angry) return Icons.mood_bad;
@@ -207,7 +207,6 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
-        boxShadow: AppColors.softShadow,
       ),
       child: Stack(
         clipBehavior: Clip.none,
@@ -233,7 +232,7 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                       child: Row(
                         children: [
                           CircleAvatar(
-                            radius: 16,
+                            radius: 20,
                             backgroundImage: NetworkImage(item.authorAvatar),
                           ),
                           const SizedBox(width: 8),
@@ -252,7 +251,7 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                                     Text(
                                       '${item.timeAgo} · ${item.category}',
                                       style: TextStyle(
-                                        fontSize: AppTypography.s9,
+                                        fontSize: AppTypography.s11,
                                         color: AppColors.mutedForeground,
                                       ),
                                     ),
@@ -261,7 +260,7 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                               ),
                               const Icon(
                                 LucideIcons.moreHorizontal,
-                                size: 16,
+                                size: 20,
                                 color: AppColors.mutedForeground,
                               ),
                             ],
@@ -384,8 +383,8 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                           child: Row(
                             children: [
                               SizedBox(
-                                width: 44,
-                                height: 20,
+                                width: 50,
+                                height: 22,
                                 child: Stack(
                                   children: [
                                     Positioned(
@@ -396,14 +395,14 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                                       ),
                                     ),
                                     Positioned(
-                                      left: 12,
+                                      left: 14,
                                       child: _buildReactionBadge(
                                         LucideIcons.thumbsUp,
                                         const Color(0xFF1877F2),
                                       ),
                                     ),
                                     Positioned(
-                                      left: 24,
+                                      left: 28,
                                       child: _buildReactionBadge(
                                         LucideIcons.laugh,
                                         AppColors.gold,
@@ -482,22 +481,18 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  if (_selectedReactionEmoji != null)
-                                    Text(
-                                      _selectedReactionEmoji!,
-                                      style: TextStyle(fontSize: AppTypography.s16),
-                                    )
-                                  else
-                                    Icon(
-                                      _selectedReactionIcon,
-                                      size: 16,
-                                      color: _selectedReactionColor,
-                                    ),
+                                  Icon(
+                                    _selectedReactionEmoji != null
+                                        ? _getFilledIcon(_selectedReactionIcon)
+                                        : _selectedReactionIcon,
+                                    size: 20,
+                                    color: _selectedReactionColor,
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     _selectedReactionLabel,
                                     style: TextStyle(
-                                      fontSize: AppTypography.s12,
+                                      fontSize: AppTypography.s11,
                                       fontWeight: FontWeight.w600,
                                       color: _selectedReactionColor,
                                     ),
@@ -520,14 +515,14 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                                 children: [
                                   Icon(
                                     LucideIcons.messageCircle,
-                                    size: 16,
+                                    size: 20,
                                     color: AppColors.mutedForeground,
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
                                     'Bình luận',
                                     style: TextStyle(
-                                      fontSize: AppTypography.s12,
+                                      fontSize: AppTypography.s11,
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.mutedForeground,
                                     ),
@@ -550,14 +545,14 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                                 children: [
                                   Icon(
                                     LucideIcons.share2,
-                                    size: 16,
+                                    size: 20,
                                     color: AppColors.mutedForeground,
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
                                     'Chia sẻ',
                                     style: TextStyle(
-                                      fontSize: AppTypography.s12,
+                                      fontSize: AppTypography.s11,
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.mutedForeground,
                                     ),
@@ -584,7 +579,7 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.card,
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
@@ -680,17 +675,17 @@ class _PostCardWidgetState extends State<_PostCardWidget> {
 
   Widget _buildReactionBadge(IconData icon, Color bg) {
     return Container(
-      width: 18,
-      height: 18,
+      width: 22,
+      height: 22,
       decoration: BoxDecoration(
         color: bg,
         shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 1.5),
+        border: Border.all(color: AppColors.card, width: 2.0),
       ),
       child: Center(
         child: Icon(
           _getFilledIcon(icon),
-          size: 9,
+          size: 12,
           color: Colors.white,
         ),
       ),
@@ -806,7 +801,7 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -875,14 +870,14 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        radius: 16,
+                        radius: 20,
                         backgroundColor: AppColors.primary,
                         child: Text(
                           c['avatar']!,
                           style: TextStyle(
                             fontSize: AppTypography.s12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppColors.card,
                           ),
                         ),
                       ),
@@ -958,7 +953,7 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                                 const Spacer(),
                                 const Icon(
                                   LucideIcons.heart,
-                                  size: 12,
+                                  size: 20,
                                   color: AppColors.primary,
                                 ),
                                 const SizedBox(width: 2),
@@ -990,20 +985,20 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
               MediaQuery.of(context).viewInsets.bottom + 16,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.card,
               border: Border(top: BorderSide(color: AppColors.border.withValues(alpha: 0.4), width: 0.5)),
             ),
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 16,
+                  radius: 20,
                   backgroundColor: AppColors.primary,
                   child: Text(
                     'T',
                     style: TextStyle(
                       fontSize: AppTypography.s12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.card,
                     ),
                   ),
                 ),
@@ -1020,7 +1015,7 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                       children: [
                         const Icon(
                           LucideIcons.smile,
-                          size: 18,
+                          size: 20,
                           color: AppColors.mutedForeground,
                         ),
                         const SizedBox(width: 8),
@@ -1042,13 +1037,13 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                         ),
                         const Icon(
                           LucideIcons.imagePlus,
-                          size: 18,
+                          size: 20,
                           color: AppColors.mutedForeground,
                         ),
                         const SizedBox(width: 8),
                         const Icon(
                           LucideIcons.camera,
-                          size: 18,
+                          size: 20,
                           color: AppColors.mutedForeground,
                         ),
                       ],
@@ -1067,8 +1062,8 @@ class _CommentsSheetWidgetState extends State<_CommentsSheetWidget> {
                     ),
                     child: const Icon(
                       LucideIcons.send,
-                      size: 16,
-                      color: Colors.white,
+                      size: 20,
+                      color: AppColors.card,
                     ),
                   ),
                 ),
@@ -1185,8 +1180,8 @@ class _NewsHeaderState extends State<_NewsHeader> {
         ),
         child: Icon(
           icon,
-          size: 16,
-          color: isActive ? Colors.white : AppColors.primary,
+          size: 20,
+          color: isActive ? AppColors.card : AppColors.primary,
         ),
       ),
     );
@@ -1214,13 +1209,12 @@ class _ComposerCard extends StatelessWidget {
           color: AppColors.card,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
-          boxShadow: AppColors.softShadow,
         ),
         child: Row(
           children: [
             Container(
-              width: 32,
-              height: 32,
+              width: 40,
+              height: 40,
               decoration: const BoxDecoration(
                 gradient: AppColors.gradientAvatar,
                 shape: BoxShape.circle,
@@ -1231,7 +1225,7 @@ class _ComposerCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: AppTypography.s12,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.card,
                   ),
                 ),
               ),
@@ -1240,28 +1234,10 @@ class _ComposerCard extends StatelessWidget {
             Expanded(
               child: Text(
                 'Bạn muốn chia sẻ điều gì với làng?',
-                style: TextStyle(fontSize: AppTypography.s13, color: AppColors.mutedForeground),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  const Icon(LucideIcons.image, size: 13, color: AppColors.primary),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Ảnh',
-                    style: TextStyle(
-                      fontSize: AppTypography.s12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ],
+                style: TextStyle(
+                  fontSize: AppTypography.s12,
+                  color: AppColors.mutedForeground,
+                ),
               ),
             ),
           ],
@@ -1339,7 +1315,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -1437,7 +1413,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                         clipBehavior: Clip.none,
                         children: [
                           CircleAvatar(
-                            radius: 18,
+                            radius: 22,
                             backgroundColor: AppColors.secondary,
                             child: Text(
                               l.avatar,
@@ -1454,7 +1430,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                             child: Container(
                               padding: const EdgeInsets.all(1.5),
                               decoration: const BoxDecoration(
-                                color: Colors.white,
+                                color: AppColors.card,
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
@@ -1510,7 +1486,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: isFollowed ? AppColors.secondary : Colors.white,
+                            color: isFollowed ? AppColors.secondary : AppColors.card,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isFollowed ? Colors.transparent : AppColors.primary,
@@ -1546,7 +1522,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected ? AppColors.primary : AppColors.card,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? Colors.transparent : AppColors.border,
@@ -1559,7 +1535,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
             style: TextStyle(
               fontSize: AppTypography.s11,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? Colors.white : AppColors.foreground,
+              color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
             ),
           ),
         ),
@@ -1575,7 +1551,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected ? AppColors.primary : AppColors.card,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? Colors.transparent : AppColors.border,
@@ -1607,7 +1583,7 @@ class _ReactionsSheetWidgetState extends State<_ReactionsSheetWidget> {
                 style: TextStyle(
                   fontSize: AppTypography.s11,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: isSelected ? Colors.white : AppColors.foreground,
+                  color: isSelected ? AppColors.primaryForeground : AppColors.foreground,
                 ),
               ),
             ],

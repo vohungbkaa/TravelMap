@@ -200,7 +200,7 @@ class _NewsCreatePostScreenState extends State<NewsCreatePostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.card,
       body: SafeArea(
         child: Column(
           children: [
@@ -208,7 +208,7 @@ class _NewsCreatePostScreenState extends State<NewsCreatePostScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.card,
                 border: Border(
                   bottom: BorderSide(
                     color: AppColors.border.withValues(alpha: 0.4),
@@ -429,7 +429,7 @@ class _NewsCreatePostScreenState extends State<NewsCreatePostScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.card,
                 border: Border(
                   top: BorderSide(
                     color: AppColors.border.withValues(alpha: 0.4),
@@ -524,7 +524,7 @@ class _NewsCreatePostScreenState extends State<NewsCreatePostScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.border.withValues(alpha: 0.6),

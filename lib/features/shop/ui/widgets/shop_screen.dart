@@ -97,7 +97,7 @@ class _ShopContentState extends State<_ShopContent> {
       children: [
         // Shop Header including search bar & category chips
         Container(
-          color: Colors.white,
+          color: AppColors.card,
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).padding.top + 8,
             left: 16,
@@ -223,7 +223,7 @@ class _ShopContentState extends State<_ShopContent> {
                         margin: const EdgeInsets.only(right: 6),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary : Colors.white,
+                          color: isSelected ? AppColors.primary : AppColors.card,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: isSelected ? Colors.transparent : AppColors.border.withValues(alpha: 0.6),
@@ -235,7 +235,7 @@ class _ShopContentState extends State<_ShopContent> {
                           style: TextStyle(
                             fontSize: AppTypography.s10,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                            color: isSelected ? Colors.white : AppColors.mutedForeground,
+                            color: isSelected ? AppColors.primaryForeground : AppColors.mutedForeground,
                           ),
                         ),
                       ),
@@ -318,7 +318,6 @@ class _ShopContentState extends State<_ShopContent> {
         height: 180,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          boxShadow: AppColors.softShadow,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
@@ -367,7 +366,7 @@ class _ShopContentState extends State<_ShopContent> {
                           Text(
                             'SẢN PHẨM TIÊU BIỂU',
                             style: TextStyle(
-                              fontSize: AppTypography.s9,
+                              fontSize: AppTypography.s11,
                               fontWeight: FontWeight.w900,
                               color: AppColors.foreground,
                               letterSpacing: 0.5,
@@ -421,7 +420,6 @@ class _ShopContentState extends State<_ShopContent> {
           color: AppColors.card,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
-          boxShadow: AppColors.softShadow,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
@@ -447,7 +445,7 @@ class _ShopContentState extends State<_ShopContent> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -486,7 +484,7 @@ class _ShopContentState extends State<_ShopContent> {
                           Text(
                             product.description,
                             style: TextStyle(
-                              fontSize: AppTypography.s9,
+                              fontSize: AppTypography.s11,
                               color: AppColors.mutedForeground,
                               height: 1.3,
                             ),
@@ -501,7 +499,7 @@ class _ShopContentState extends State<_ShopContent> {
                           Text(
                             product.price,
                             style: TextStyle(
-                              fontSize: AppTypography.s10,
+                              fontSize: AppTypography.s12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
                             ),
@@ -517,7 +515,7 @@ class _ShopContentState extends State<_ShopContent> {
                               Text(
                                 '${product.rating} (128)',
                                 style: TextStyle(
-                                  fontSize: AppTypography.s9,
+                                  fontSize: AppTypography.s11,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.mutedForeground,
                                 ),

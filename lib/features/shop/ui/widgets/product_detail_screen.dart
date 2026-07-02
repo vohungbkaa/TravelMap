@@ -95,7 +95,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final p = widget.product;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.card,
       body: Stack(
         children: [
           CustomScrollView(
@@ -104,8 +104,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               SliverAppBar(
                 pinned: true,
                 expandedHeight: 280,
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
+                backgroundColor: AppColors.card,
+                surfaceTintColor: AppColors.card,
                 centerTitle: false,
                 leadingWidth: 52,
                 titleSpacing: 16,
@@ -118,7 +118,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: AppColors.card.withValues(alpha: 0.9),
                           shape: BoxShape.circle,
                           boxShadow: AppColors.softShadow,
                         ),
@@ -355,7 +355,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 MediaQuery.of(context).padding.bottom + 16,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.card,
                 border: const Border(
                   top: BorderSide(color: AppColors.border, width: 0.5),
                 ),
@@ -377,16 +377,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         setState(() => _isSaved = !_isSaved);
                       },
                       style: OutlinedButton.styleFrom(
+                        backgroundColor: AppColors.card,
                         foregroundColor: AppColors.foreground,
                         side: const BorderSide(color: AppColors.border),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shape: const StadiumBorder(),
                       ),
                       icon: Icon(
                         _isSaved ? LucideIcons.bookmark : LucideIcons.bookmark,
-                        size: 16,
+                        size: 20,
                         color: _isSaved ? AppColors.primary : AppColors.foreground,
                       ),
                       label: Text(
@@ -408,14 +407,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.primaryForeground,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
+                        shape: const StadiumBorder(),
                       ),
-                      icon: const Icon(LucideIcons.phone, size: 16),
+                      icon: const Icon(LucideIcons.info, size: 20),
                       label: Text(
                         'Liên hệ HTX',
                         style: TextStyle(
@@ -473,8 +470,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
+            backgroundColor: AppColors.card,
+            surfaceTintColor: AppColors.card,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -570,7 +567,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.primaryForeground,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

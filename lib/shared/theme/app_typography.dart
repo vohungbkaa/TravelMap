@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class AppTypography {
   AppTypography._();
 
-  // Scale factor (can be adjusted easily centrally). Increased to 1.15 as font is currently small
-  static double scale = 1.18;
+  // Scale factor (can be adjusted easily centrally). Increased to 1.28 to match viewport layout proportions
+  static double scale = 1.28;
 
   // Base font size values (scaled dynamically)
   static double get s25 => 25.0 * scale;
